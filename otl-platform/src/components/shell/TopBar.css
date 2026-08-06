@@ -1,0 +1,265 @@
+/* ==========================================================
+   TOP BAR 001
+   ========================================================== */
+
+.platform-topbar {
+    height: 64px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 20px;
+
+    background: linear-gradient(
+        to bottom,
+        #ffffff,
+        #f7f8fa
+    );
+
+    border-bottom: 1px solid #d8dde6;
+
+    flex-shrink: 0;
+
+    z-index: 100;
+}
+
+
+/* ==========================================================
+   BRAND 001
+   ========================================================== */
+
+.platform-brand {
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+}
+
+.platform-logo {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background: linear-gradient(
+        135deg,
+        #2563eb,
+        #1d4ed8
+    );
+
+    color: white;
+
+    font-size: 18px;
+    font-weight: 700;
+
+    user-select: none;
+}
+
+.platform-brand h1 {
+    margin: 0;
+
+    color: #111827;
+
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.platform-brand span {
+    color: #6b7280;
+
+    font-size: 13px;
+}
+
+
+/* ==========================================================
+   SEARCH 001
+   ========================================================== */
+
+.platform-search {
+    width: 420px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 8px 12px;
+
+    background: white;
+
+    border: 1px solid #cfd7e3;
+
+    border-radius: 8px;
+
+    transition:
+        border-color .15s,
+        box-shadow .15s;
+}
+
+.platform-search:focus-within {
+
+    border-color: #2563eb;
+
+    box-shadow:
+        0 0 0 3px rgba(37,99,235,.10);
+
+}
+
+.platform-search input {
+
+    flex: 1;
+
+    border: none;
+    outline: none;
+
+    background: transparent;
+
+    font-size: 14px;
+
+}
+
+
+/* ==========================================================
+   USER 001
+   ========================================================== */
+
+.platform-user {
+    position: relative;
+}
+
+.platform-user-button {
+
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    min-width: 220px;
+
+    padding: 7px 10px;
+
+    background: white;
+
+    border: 1px solid #cfd7e3;
+
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    transition:
+        background .15s,
+        border-color .15s,
+        box-shadow .15s;
+
+}
+
+.platform-user-button:hover {
+
+    background: #f8fafc;
+
+    border-color: #9fb3cc;
+
+    box-shadow:
+        0 2px 10px rgba(0,0,0,.06);
+
+}
+
+.platform-avatar,
+.platform-avatar-placeholder {
+
+    width: 32px;
+    height: 32px;
+
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    object-fit: cover;
+
+    background: #e8edf4;
+
+    color: #64748b;
+
+}
+
+.platform-user-button span {
+
+    flex: 1;
+
+    text-align: left;
+
+    overflow: hidden;
+
+    white-space: nowrap;
+
+    text-overflow: ellipsis;
+
+    color: #111827;
+
+    font-size: 13px;
+    font-weight: 600;
+
+}
+
+
+/* ==========================================================
+   DROPDOWN 001
+   ========================================================== */
+
+.platform-dropdown {
+
+    position: absolute;
+
+    top: calc(100% + 8px);
+    right: 0;
+
+    width: 220px;
+
+    background: white;
+
+    border: 1px solid #d8dde6;
+
+    border-radius: 10px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 18px 45px rgba(15,23,42,.18);
+
+    z-index: 1000;
+
+}
+
+.platform-dropdown button {
+
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 12px 16px;
+
+    border: none;
+
+    background: white;
+
+    cursor: pointer;
+
+    font-size: 14px;
+
+}
+
+.platform-dropdown button:hover {
+
+    background: #edf4ff;
+
+}

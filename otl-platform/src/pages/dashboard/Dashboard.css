@@ -1,0 +1,260 @@
+/* ==========================================================
+   Dashboard
+   ========================================================== */
+
+.dashboard {
+    display: flex;
+    flex-direction: column;
+
+    gap: 24px;
+
+    padding: 28px;
+
+    height: 100%;
+
+    background: #f5f7fa;
+
+    overflow-y: auto;
+}
+
+
+/* ==========================================================
+   Header
+   ========================================================== */
+
+.dashboard-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.dashboard-header h1 {
+    margin: 0;
+
+    color: #1f2937;
+
+    font-size: 32px;
+    font-weight: 700;
+}
+
+.dashboard-subtitle {
+    margin-top: 8px;
+
+    color: #6b7280;
+
+    font-size: 15px;
+}
+
+.dashboard-subtitle strong {
+    color: #111827;
+}
+
+
+/* ==========================================================
+   Panels
+   ========================================================== */
+
+.dashboard-panel {
+    background: #ffffff;
+
+    border: 1px solid #d8dde6;
+
+    border-radius: 10px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 1px 2px rgba(15,23,42,.04);
+}
+
+.panel-header {
+    display: flex;
+    align-items: center;
+
+    height: 46px;
+
+    padding: 0 18px;
+
+    background: linear-gradient(
+        to bottom,
+        #fafbfc,
+        #f3f5f8
+    );
+
+    border-bottom: 1px solid #d8dde6;
+
+    color: #4b5563;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    letter-spacing: .08em;
+}
+
+.panel-body {
+    padding: 24px;
+}
+
+
+/* ==========================================================
+   Organization
+   ========================================================== */
+
+.organization-name {
+    color: #111827;
+
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.organization-role {
+    margin-top: 6px;
+
+    color: #2563eb;
+
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.dashboard-muted {
+    color: #6b7280;
+}
+
+.dashboard-warning {
+    color: #d97706;
+
+    font-weight: 600;
+}
+
+
+/* ==========================================================
+   Tiles
+   ========================================================== */
+
+.dashboard-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fill, minmax(250px, 1fr));
+
+    gap: 18px;
+
+    padding: 24px;
+}
+
+.dashboard-tile {
+    display: flex;
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 12px;
+
+    min-height: 150px;
+
+    padding: 22px;
+
+    background: white;
+
+    border: 1px solid #d8dde6;
+
+    border-radius: 10px;
+
+    cursor: pointer;
+
+    transition:
+        border-color .15s,
+        background .15s,
+        transform .08s,
+        box-shadow .15s;
+}
+
+.dashboard-tile:hover:not(:disabled) {
+    background: #edf4ff;
+
+    border-color: #93c5fd;
+
+    box-shadow:
+        0 8px 20px rgba(37,99,235,.10);
+
+    transform: translateY(-1px);
+}
+
+.dashboard-tile:disabled {
+    opacity: .45;
+
+    cursor: not-allowed;
+}
+
+.tile-icon {
+    font-size: 28px;
+
+    line-height: 1;
+}
+
+.tile-title {
+    color: #111827;
+
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.tile-description {
+    color: #6b7280;
+
+    font-size: 13px;
+
+    line-height: 1.5;
+}
+
+.dashboard-onboarding {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    padding: 20px;
+
+    background: #fffdf5;
+
+    border: 1px solid #f5d76e;
+
+    border-radius: 8px;
+}
+
+.onboarding-title {
+    font-size: 22px;
+
+    font-weight: 700;
+
+    color: #1f2937;
+}
+
+.onboarding-text {
+    color: #4b5563;
+
+    line-height: 1.6;
+}
+
+.dashboard-signout {
+    align-self: flex-start;
+
+    margin-top: 8px;
+
+    padding: 10px 18px;
+
+    border: 1px solid #d1d5db;
+
+    border-radius: 6px;
+
+    background: white;
+
+    cursor: pointer;
+
+    font-weight: 600;
+}
+
+.dashboard-signout:hover {
+    background: #f3f4f6;
+}
