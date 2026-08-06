@@ -54,6 +54,14 @@ export default function EditOrganizationDialog({
 
 
   const [
+    error,
+    setError,
+  ] =
+    useState<string | null>(null);
+
+
+
+  const [
     form,
     setForm,
   ] =
@@ -66,6 +74,14 @@ export default function EditOrganizationDialog({
 
 
   useEffect(() => {
+
+    if (!open) {
+      return;
+    }
+
+
+    setError(null);
+
 
     if (organization) {
 
@@ -107,6 +123,8 @@ export default function EditOrganizationDialog({
 
     setSaving(true);
 
+    setError(null);
+
 
     try {
 
@@ -134,13 +152,30 @@ export default function EditOrganizationDialog({
 
       onSaved();
 
-
       onClose();
+
+
+    } catch (err) {
+
+
+      console.error(
+        "Organization save failed:",
+        err,
+      );
+
+
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Unable to save organization.",
+      );
 
 
     } finally {
 
+
       setSaving(false);
+
 
     }
 
@@ -158,6 +193,7 @@ export default function EditOrganizationDialog({
 
         <div className="dialog-header">
 
+
           <h2>
 
             {
@@ -167,6 +203,7 @@ export default function EditOrganizationDialog({
             }
 
           </h2>
+
 
 
           <button
@@ -181,7 +218,20 @@ export default function EditOrganizationDialog({
 
 
 
+
         <div className="dialog-body">
+
+
+          {error && (
+
+            <div className="dialog-error">
+
+              {error}
+
+            </div>
+
+          )}
+
 
 
           <div className="form-group">
@@ -207,6 +257,7 @@ export default function EditOrganizationDialog({
             />
 
           </div>
+
 
 
 
@@ -243,9 +294,12 @@ export default function EditOrganizationDialog({
 
 
 
+
           <div className="checkbox-group">
 
+
             <label>
+
 
               <input
                 type="checkbox"
@@ -264,15 +318,19 @@ export default function EditOrganizationDialog({
                 }
               />
 
+
               Active
 
+
             </label>
+
 
           </div>
 
 
 
         </div>
+
 
 
 
@@ -290,6 +348,8 @@ export default function EditOrganizationDialog({
 
 
 
+
+
           <button
             className="primary-button"
             onClick={handleSave}
@@ -301,6 +361,7 @@ export default function EditOrganizationDialog({
                 ? "Saving..."
                 : "Save Organization"
             }
+
 
           </button>
 
@@ -314,4 +375,5 @@ export default function EditOrganizationDialog({
     </div>
 
   );
+
 }

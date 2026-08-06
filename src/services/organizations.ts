@@ -189,8 +189,13 @@ export async function updateOrganization(
       id,
     )
     .select()
-    .single();
+    .maybeSingle();
 
+ if (!data) {
+  throw new Error(
+    "You do not have permission to update this organization."
+  );
+}
 
   if (error) {
     throw new Error(
