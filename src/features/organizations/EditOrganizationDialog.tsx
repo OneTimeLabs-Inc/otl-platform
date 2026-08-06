@@ -33,6 +33,7 @@ type OrganizationForm = {
   name: string;
   slug: string;
   active: boolean;
+  initializeWorkspace: boolean;
 };
 
 
@@ -65,11 +66,12 @@ export default function EditOrganizationDialog({
     form,
     setForm,
   ] =
-    useState<OrganizationForm>({
-      name: "",
-      slug: "",
-      active: true,
-    });
+useState<OrganizationForm>({
+  name: "",
+  slug: "",
+  active: true,
+  initializeWorkspace: false,
+});
 
 
 
@@ -85,16 +87,19 @@ export default function EditOrganizationDialog({
 
     if (organization) {
 
-      setForm({
-        name:
-          organization.name,
+setForm({
+  name:
+    organization.name,
 
-        slug:
-          organization.slug,
+  slug:
+    organization.slug,
 
-        active:
-          organization.active,
-      });
+  active:
+    organization.active,
+
+  initializeWorkspace:
+    false,
+});
 
     } else {
 
@@ -102,6 +107,7 @@ export default function EditOrganizationDialog({
         name: "",
         slug: "",
         active: true,
+        initializeWorkspace: false,
       });
 
     }
@@ -141,10 +147,11 @@ export default function EditOrganizationDialog({
       } else {
 
 
-        await createOrganization(
-          form.name,
-          form.slug,
-        );
+await createOrganization(
+  form.name,
+  form.slug,
+  form.initializeWorkspace,
+);
 
 
       }
@@ -295,37 +302,32 @@ export default function EditOrganizationDialog({
 
 
 
-          <div className="checkbox-group">
+<div className="checkbox-group">
 
+  <label>
 
-            <label>
+    <input
+      type="checkbox"
 
+      checked={
+        form.initializeWorkspace
+      }
 
-              <input
-                type="checkbox"
+      onChange={(e) =>
+        setForm({
+          ...form,
 
-                checked={
-                  form.active
-                }
+          initializeWorkspace:
+            e.target.checked,
+        })
+      }
+    />
 
-                onChange={(e) =>
-                  setForm({
-                    ...form,
+    Initialize OTLES Workspace
 
-                    active:
-                      e.target.checked,
-                  })
-                }
-              />
+  </label>
 
-
-              Active
-
-
-            </label>
-
-
-          </div>
+</div>
 
 
 

@@ -140,20 +140,57 @@ export async function getOrganizations(): Promise<
 export async function createOrganization(
   name: string,
   slug: string,
+  initializeWorkspace: boolean,
 ): Promise<Organization> {
+
+
+  const {
+  data: {
+    user,
+  },
+} = await supabase.auth.getUser();
+
+
+if (!user) {
+  throw new Error(
+    "Unable to determine current user.",
+  );
+}
+
+
+const {
+  data: platformUser,
+  error: platformUserError,
+} = await supabase
+  .from("platform_users")
+  .select("id")
+  .eq(
+    "auth_user_id",
+    user.id,
+  )
+  .single();
+
+
+if (platformUserError || !platformUser) {
+  throw new Error(
+    "Unable to determine platform user.",
+  );
+}
+
 
   const {
     data,
     error,
   } = await supabase
     .from("organizations")
-    .insert({
-      name,
-      slug,
-      active: true,
-    })
+.insert({
+  name,
+  slug,
+  active: true,
+})
     .select()
     .single();
+
 
 
   if (error) {
@@ -161,6 +198,47 @@ export async function createOrganization(
       `Unable to create organization: ${error.message}`,
     );
   }
+
+
+
+if (initializeWorkspace) {
+
+  console.log(
+    "Creating OTLES workspace:",
+    {
+      organization_id: data.id,
+      name: `${data.name}'s Workspace`,
+      slug: data.slug,
+    },
+  );
+
+
+  const {
+    error: workspaceError,
+  } = await supabase
+    .from("otles_workspaces")
+.insert({
+  organization_id: data.id,
+  name: `${data.name}'s Workspace`,
+  slug: data.slug,
+  created_by_user_id: platformUser.id,
+});
+
+
+  console.log(
+    "Workspace creation error:",
+    workspaceError,
+  );
+
+
+  if (workspaceError) {
+    throw new Error(
+      `Unable to create OTLES workspace: ${workspaceError.message}`,
+    );
+  }
+
+}
+
 
 
   return data;
