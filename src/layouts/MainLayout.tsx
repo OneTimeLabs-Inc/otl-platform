@@ -43,7 +43,10 @@ export default function MainLayout() {
   ] =
     useState(false);
 
-
+const [
+  organizationRefresh,
+  setOrganizationRefresh,
+] = useState(0);
 
   function renderPage() {
 
@@ -82,36 +85,40 @@ export default function MainLayout() {
 
         return (
 
-          <Organizations
+<Organizations
 
-            onNewOrganization={() => {
+  refreshKey={
+    organizationRefresh
+  }
 
-              setSelectedOrganization(
-                null,
-              );
+  onNewOrganization={() => {
 
-              setOrganizationDialogOpen(
-                true,
-              );
+    setSelectedOrganization(
+      null,
+    );
 
-            }}
+    setOrganizationDialogOpen(
+      true,
+    );
+
+  }}
 
 
-            onEditOrganization={(
-              organization,
-            ) => {
+  onEditOrganization={(
+    organization,
+  ) => {
 
-              setSelectedOrganization(
-                organization,
-              );
+    setSelectedOrganization(
+      organization,
+    );
 
-              setOrganizationDialogOpen(
-                true,
-              );
+    setOrganizationDialogOpen(
+      true,
+    );
 
-            }}
+  }}
 
-          />
+/>
 
         );
 
@@ -175,17 +182,21 @@ export default function MainLayout() {
         }}
 
 
-        onSaved={() => {
+onSaved={() => {
 
-          setOrganizationDialogOpen(
-            false,
-          );
+  setOrganizationRefresh(
+    value => value + 1,
+  );
 
-          setSelectedOrganization(
-            null,
-          );
+  setOrganizationDialogOpen(
+    false,
+  );
 
-        }}
+  setSelectedOrganization(
+    null,
+  );
+
+}}
 
       />
 

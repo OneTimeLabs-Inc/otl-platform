@@ -17,6 +17,83 @@
   overflow: hidden;
 }
 
+.save-button {
+    height: 38px;
+    min-width: 160px;
+    padding: 0 10px;
+
+    border: none;
+    border-radius: 8px;
+
+    background: #2563eb;
+
+    color: white;
+
+    font-size: 16px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: .15s;
+}
+
+.save-button:hover {
+    background: #1d4ed8;
+}
+
+
+/* ==========================================================
+   DANGER BUTTON
+   ========================================================== */
+
+.danger-button {
+    height: 38px;
+
+    padding: 0 18px;
+
+    border: none;
+    border-radius: 8px;
+
+    background: #fc6666;
+
+    color: white;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: .15s;
+}
+
+.dialog-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+
+
+.footer-actions {
+  display: flex;
+  gap: 8px;
+  
+}
+
+.primary-button:hover {
+    background: #1d4ed8;
+}
+
+
+.danger-button:hover {
+  background: #b91c1c;
+}
+
+
+.danger-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
 
 
 /* ==========================================================

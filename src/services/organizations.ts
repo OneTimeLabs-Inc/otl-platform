@@ -269,11 +269,6 @@ export async function updateOrganization(
     .select()
     .maybeSingle();
 
- if (!data) {
-  throw new Error(
-    "You do not have permission to update this organization."
-  );
-}
 
   if (error) {
     throw new Error(
@@ -282,5 +277,85 @@ export async function updateOrganization(
   }
 
 
+  if (!data) {
+    throw new Error(
+      "Organization was not updated. You may not have permission."
+    );
+  }
+
+
   return data;
+}
+
+/* ==========================================================
+   ORGANIZATIONS 004
+   Delete organization
+   ========================================================== */
+
+export async function deleteOrganization(
+  id: string,
+): Promise<void> {
+
+
+  // Remove OTLES workspace
+
+  const {
+    error: workspaceError,
+  } = await supabase
+    .from("otles_workspaces")
+    .delete()
+    .eq(
+      "organization_id",
+      id,
+    );
+
+
+  if (workspaceError) {
+    throw new Error(
+      `Unable to delete workspace: ${workspaceError.message}`,
+    );
+  }
+
+
+
+  // Remove memberships
+
+  const {
+    error: memberError,
+  } = await supabase
+    .from("organization_members")
+    .delete()
+    .eq(
+      "organization_id",
+      id,
+    );
+
+
+  if (memberError) {
+    throw new Error(
+      `Unable to delete organization members: ${memberError.message}`,
+    );
+  }
+
+
+
+  // Remove organization
+
+  const {
+    error,
+  } = await supabase
+    .from("organizations")
+    .delete()
+    .eq(
+      "id",
+      id,
+    );
+
+
+  if (error) {
+    throw new Error(
+      `Unable to delete organization: ${error.message}`,
+    );
+  }
+
 }

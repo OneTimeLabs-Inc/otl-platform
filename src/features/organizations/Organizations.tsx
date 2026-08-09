@@ -16,15 +16,19 @@ import "./Organizations.css";
 
 type Props = {
   onNewOrganization: () => void;
+
   onEditOrganization: (
     organization: Organization,
   ) => void;
+
+  refreshKey: number;
 };
 
 
 export default function Organizations({
   onNewOrganization,
   onEditOrganization,
+  refreshKey,
 }: Props) {
 
 
@@ -64,11 +68,13 @@ export default function Organizations({
 
 
 
-  useEffect(() => {
+useEffect(() => {
 
-    void loadOrganizations();
+  void loadOrganizations();
 
-  }, []);
+}, [
+  refreshKey,
+]);
 
 
 

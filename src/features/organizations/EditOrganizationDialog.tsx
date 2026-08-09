@@ -3,6 +3,10 @@ import {
   useState,
 } from "react";
 
+import {
+  initializeWorkspaceForOrganization,
+} from "../../services/workspaces";
+
 import type {
   Organization,
 } from "../../types/organizations";
@@ -10,6 +14,7 @@ import type {
 import {
   createOrganization,
   updateOrganization,
+  deleteOrganization,  
 } from "../../services/organizations";
 
 import "./EditOrganizationDialog.css";
@@ -135,14 +140,25 @@ setForm({
     try {
 
 
-      if (organization) {
+if (organization) {
+
+  await updateOrganization(
+    organization.id,
+    {
+      name: form.name,
+      slug: form.slug,
+      active: form.active,
+    },
+  );
 
 
-        await updateOrganization(
-          organization.id,
-          form,
-        );
+  if (form.initializeWorkspace) {
 
+    await initializeWorkspaceForOrganization(
+      organization.id,
+    );
+
+  }
 
       } else {
 
@@ -188,6 +204,51 @@ await createOrganization(
 
   }
 
+  async function handleDelete() {
+
+  if (!organization) {
+    return;
+  }
+
+
+  const confirmed =
+    window.confirm(
+      `Delete ${organization.name}? This cannot be undone.`,
+    );
+
+
+  if (!confirmed) {
+    return;
+  }
+
+
+  setSaving(true);
+
+
+  try {
+
+    await deleteOrganization(
+      organization.id,
+    );
+
+    onSaved();
+    onClose();
+
+  } catch (err) {
+
+    setError(
+      err instanceof Error
+        ? err.message
+        : "Unable to delete organization.",
+    );
+
+  } finally {
+
+    setSaving(false);
+
+  }
+
+}
 
 
   return (
@@ -337,45 +398,44 @@ await createOrganization(
 
 
 
-        <div className="dialog-footer">
+<div className="dialog-footer">
+
+{organization && (
+    <button
+      className="danger-button"
+      onClick={handleDelete}
+      disabled={saving}
+    >
+      Delete
+    </button>
+  )}
+
+  <div className="footer-actions">
+
+    <button
+      className="secondary-button"
+      onClick={onClose}
+      disabled={saving}
+    >
+      Cancel
+    </button>
 
 
-          <button
-            className="secondary-button"
-            onClick={onClose}
-            disabled={saving}
-          >
-            Cancel
-          </button>
 
-
-
-
-
-          <button
-            className="primary-button"
-            onClick={handleSave}
-            disabled={saving}
-          >
-
-            {
-              saving
-                ? "Saving..."
-                : "Save Organization"
-            }
-
-
-          </button>
-
-
-        </div>
-
-
-      </div>
+    <button
+      className="save-button"
+      onClick={handleSave}
+      disabled={saving}
+    >
+      Save
+    </button>
 
 
     </div>
+      </div>
+    </div>
+</div>
 
-  );
+  );  
 
 }

@@ -15,16 +15,23 @@ import {
   getCurrentSession,
   getCurrentUser,
   onAuthStateChange,
+  signOut,
 } from "../services/auth";
 
 import {
-  provisionPlatformUser,
+  getCurrentPlatformUser,
 } from "../services/platformUsers";
+
+/* ==========================================================
+   AUTH CONTEXT 001
+   Platform authentication state
+   ========================================================== */
 
 type AuthContextType = {
   isLoading: boolean;
   session: Session | null;
   user: User | null;
+  accessDenied: boolean;
 };
 
 const AuthContext =
@@ -35,6 +42,11 @@ const AuthContext =
 type Props = {
   children: ReactNode;
 };
+
+/* ==========================================================
+   AUTH PROVIDER 002
+   Platform authentication and authorization
+   ========================================================== */
 
 export function AuthProvider({
   children,
@@ -48,33 +60,97 @@ export function AuthProvider({
   const [user, setUser] =
     useState<User | null>(null);
 
+  const [accessDenied, setAccessDenied] =
+    useState(false);
+
+  /* ========================================================
+     PLATFORM ACCESS 003
+     Verify platform administrator authorization
+     ======================================================== */
+
+  async function authorizePlatformUser(
+    nextSession: Session | null,
+  ) {
+    if (!nextSession?.user) {
+      setSession(null);
+      setUser(null);
+      setAccessDenied(false);
+
+      return;
+    }
+
+    const platformUser =
+      await getCurrentPlatformUser();
+
+    /*
+     * OTLES-Platform is restricted to users explicitly
+     * designated as platform administrators.
+     *
+     * Organization administrators do not receive Platform
+     * access.
+     */
+
+    if (
+      !platformUser ||
+      !platformUser.active ||
+      !platformUser.is_platform_admin
+    ) {
+      setSession(null);
+      setUser(null);
+      setAccessDenied(true);
+
+      await signOut();
+
+      return;
+    }
+
+    setAccessDenied(false);
+
+    setSession(nextSession);
+
+    setUser(nextSession.user);
+  }
+
+  /* ========================================================
+     AUTH INITIALIZATION 004
+     Restore and authorize existing session
+     ======================================================== */
+
   useEffect(() => {
     async function initialize() {
       try {
         const currentSession =
           await getCurrentSession();
 
+        /*
+         * Calling getCurrentUser verifies that the current
+         * Supabase session represents a valid authenticated
+         * user before Platform authorization is evaluated.
+         */
+
         const currentUser =
           await getCurrentUser();
 
-        if (currentUser) {
-          try {
-            await provisionPlatformUser();
-          } catch (err) {
-            console.error(
-              "Provisioning failed:",
-              err,
-            );
-          }
+        if (
+          currentSession &&
+          currentUser
+        ) {
+          await authorizePlatformUser(
+            currentSession,
+          );
+        } else {
+          setSession(null);
+          setUser(null);
+          setAccessDenied(false);
         }
-
-        setSession(currentSession);
-        setUser(currentUser);
       } catch (err) {
         console.error(
-          "Failed to initialize authentication:",
+          "Failed to initialize Platform authentication:",
           err,
         );
+
+        setSession(null);
+        setUser(null);
       } finally {
         setIsLoading(false);
       }
@@ -82,25 +158,28 @@ export function AuthProvider({
 
     void initialize();
 
+    /* ======================================================
+       AUTH STATE 005
+       Handle login/logout events
+       ====================================================== */
+
     const {
       data: { subscription },
     } = onAuthStateChange(
-      async (_event, session) => {
-        if (session?.user) {
-          try {
-            await provisionPlatformUser();
-          } catch (err) {
-            console.error(
-              "Provisioning failed:",
-              err,
-            );
-          }
-        }
+      async (_event, nextSession) => {
+        try {
+          await authorizePlatformUser(
+            nextSession,
+          );
+        } catch (err) {
+          console.error(
+            "Failed to authorize Platform user:",
+            err,
+          );
 
-        setSession(session);
-        setUser(
-          session?.user ?? null,
-        );
+          setSession(null);
+          setUser(null);
+        }
       },
     );
 
@@ -109,18 +188,27 @@ export function AuthProvider({
     };
   }, []);
 
+  /* ========================================================
+     AUTH CONTEXT PROVIDER 006
+     ======================================================== */
+
   return (
     <AuthContext.Provider
       value={{
         isLoading,
         session,
         user,
+        accessDenied,
       }}
     >
       {children}
     </AuthContext.Provider>
   );
 }
+
+/* ==========================================================
+   AUTH CONTEXT HOOK 007
+   ========================================================== */
 
 export function useAuthContext() {
   const context =
