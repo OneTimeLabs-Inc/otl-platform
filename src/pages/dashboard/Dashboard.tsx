@@ -13,10 +13,12 @@ import "./Dashboard.css";
 
 type Props = {
   onOpenOrganizations: () => void;
+  onOpenUsers: () => void;
 };
 
 export default function Dashboard({
   onOpenOrganizations,
+  onOpenUsers,
 }: Props) {
   const { user } = useAuth();
 
@@ -158,6 +160,23 @@ export default function Dashboard({
 
 <button
   className="dashboard-tile"
+  onClick={onOpenUsers}
+>
+  <div className="tile-icon">
+    👥
+  </div>
+
+  <div className="tile-title">
+    Users
+  </div>
+
+  <div className="tile-description">
+    Manage OTLES Users. Assign Organizations.
+  </div>
+</button>
+
+<button
+  className="dashboard-tile"
   onClick={onOpenOrganizations}
 >
   <div className="tile-icon">
@@ -172,25 +191,6 @@ export default function Dashboard({
     Manage organizations and access.
   </div>
 </button>
-
-            <button
-              className="dashboard-tile"
-              disabled
-            >
-
-              <div className="tile-icon">
-                🏢
-              </div>
-
-              <div className="tile-title">
-                Organizations
-              </div>
-
-              <div className="tile-description">
-                Coming Soon
-              </div>
-
-            </button>
 
             <button
               className="dashboard-tile"

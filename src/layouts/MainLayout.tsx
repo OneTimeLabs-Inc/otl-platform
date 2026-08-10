@@ -56,16 +56,20 @@ const [
       case "dashboard":
 
         return (
+          
+<Dashboard
+  onOpenOrganizations={() =>
+    setPage(
+      "organizations",
+    )
+  }
 
-          <Dashboard
-
-            onOpenOrganizations={() =>
-              setPage(
-                "organizations",
-              )
-            }
-
-          />
+  onOpenUsers={() =>
+    setPage(
+      "users",
+    )
+  }
+/>
 
         );
 
@@ -128,15 +132,19 @@ const [
 
         return (
 
-          <Dashboard
+<Dashboard
+  onOpenOrganizations={() =>
+    setPage(
+      "organizations",
+    )
+  }
 
-            onOpenOrganizations={() =>
-              setPage(
-                "organizations",
-              )
-            }
-
-          />
+  onOpenUsers={() =>
+    setPage(
+      "users",
+    )
+  }
+/>
 
         );
 
