@@ -2,6 +2,7 @@ import {
   Home,
   Users,
   Building2,
+  FileText,
   Boxes,
   Shield,
   ClipboardList,
@@ -64,6 +65,14 @@ export default function Sidebar({
   <Building2 size={18} />
   <span>Organizations</span>
 </button>
+
+        <button
+          className={`sidebar-item ${currentPage === "documents" ? "active" : ""}`}
+          onClick={() => onNavigate("documents")}
+        >
+          <FileText size={18} />
+          <span>Documents</span>
+        </button>
 
         <button
           className="sidebar-item"

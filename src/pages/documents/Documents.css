@@ -1,0 +1,606 @@
+/* ==========================================================
+   PLATFORM DOCUMENTS
+   Global OTLES document administration
+   ========================================================== */
+
+.platform-documents-page {
+  flex: 1;
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  padding: 28px;
+
+  box-sizing: border-box;
+
+  color: #111827;
+}
+
+
+/* ==========================================================
+   PAGE HEADER 001
+   ========================================================== */
+
+.platform-documents-heading {
+  flex: 0 0 auto;
+
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  padding: 16px 18px;
+
+  border-bottom: 1px solid #e1e6ee;
+
+  background: linear-gradient(
+    to bottom,
+    #fafbfc,
+    #f5f7fa
+  );
+}
+
+.platform-documents-heading h1 {
+  margin: 0;
+
+  font-size: 22px;
+  font-weight: 650;
+}
+
+.platform-documents-heading p {
+  margin: 4px 0 0;
+
+  color: #667085;
+
+  font-size: 12px;
+}
+
+
+/* ==========================================================
+   PAGE CONTAINER 002
+   Matches the contained-card pattern used across Platform
+   ========================================================== */
+
+.platform-documents-container {
+  flex: 1;
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  padding: 0;
+
+  box-sizing: border-box;
+
+  border: 1px solid #e1e6ee;
+  border-radius: 8px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 2px 8px rgba(15, 23, 42, 0.04);
+
+  overflow: hidden;
+}
+
+
+/* ==========================================================
+   FILTERS 003
+   ========================================================== */
+
+.platform-documents-filters {
+  flex: 0 0 auto;
+
+  display: flex;
+  align-items: flex-end;
+
+  gap: 10px;
+
+padding: 12px 14px 14px;
+
+background: #ffffff;
+}
+
+.platform-documents-filters label {
+  width: min(280px, 100%);
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+}
+
+.platform-documents-filters label > span {
+  color: #475467;
+
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.platform-documents-filters select {
+  height: 32px;
+
+  padding: 0 30px 0 9px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #d0d5dd;
+  border-radius: 5px;
+
+  outline: none;
+
+  background: #ffffff;
+
+  color: #101828;
+
+  font-size: 12px;
+}
+
+.platform-documents-filters select:focus {
+  border-color: #98a2b3;
+}
+
+.platform-documents-filters select:disabled {
+  background: #f8fafc;
+
+  color: #98a2b3;
+
+  cursor: default;
+}
+
+
+/* ==========================================================
+   ERROR 004
+   ========================================================== */
+
+.platform-documents-error {
+  flex: 0 0 auto;
+
+  margin: 0 14px 10px;
+  padding: 8px 10px;
+
+  border: 1px solid #fecaca;
+  border-radius: 5px;
+
+  background: #fef2f2;
+
+  color: #b42318;
+
+  font-size: 11px;
+}
+
+
+/* ==========================================================
+   DOCUMENT WORKSPACE 005
+   Explorer/editor live inside the outer Platform container
+   ========================================================== */
+
+.platform-documents-workspace {
+  flex: 1;
+  min-height: 0;
+
+  display: grid;
+  grid-template-columns: 310px minmax(0, 1fr);
+
+  overflow: hidden;
+
+  margin: 0 14px 14px;
+
+  border: 1px solid #d8dee8;
+  border-radius: 6px;
+
+  background: #ffffff;
+}
+
+
+/* ==========================================================
+   EXPLORER 006
+   ========================================================== */
+
+.platform-documents-explorer {
+  min-width: 0;
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  border-right: 1px solid #e5e7eb;
+
+  background: #fbfcfe;
+}
+
+.platform-documents-explorer-header {
+  flex: 0 0 auto;
+
+  padding: 10px;
+
+  border-bottom: 1px solid #e5e7eb;
+
+  background: #f8fafc;
+}
+
+.platform-documents-explorer-header > div:first-child {
+  display: flex;
+  flex-direction: column;
+
+  gap: 2px;
+}
+
+.platform-documents-explorer-header strong {
+  color: #344054;
+
+  font-size: 11px;
+  font-weight: 650;
+}
+
+.platform-documents-explorer-header span {
+  color: #667085;
+
+  font-size: 9px;
+
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+
+/* ==========================================================
+   TREE CONTROLS 007
+   ========================================================== */
+
+.platform-documents-tree-controls {
+  display: flex;
+
+  gap: 5px;
+
+  margin-top: 8px;
+}
+
+.platform-documents-tree-controls button {
+  height: 22px;
+
+  padding: 0 7px;
+
+  border: 1px solid #d8dee8;
+  border-radius: 4px;
+
+  background: #ffffff;
+
+  color: #667085;
+
+  font-size: 8px;
+  font-weight: 700;
+
+  text-transform: uppercase;
+
+  cursor: pointer;
+}
+
+.platform-documents-tree-controls button:hover:not(:disabled) {
+  border-color: #c7d7ef;
+
+  background: #edf4ff;
+
+  color: #2563eb;
+}
+
+.platform-documents-tree-controls button:disabled {
+  opacity: 0.45;
+
+  cursor: default;
+}
+
+
+/* ==========================================================
+   TREE 008
+   ========================================================== */
+
+.platform-documents-tree {
+  flex: 1;
+  min-height: 0;
+
+  overflow: auto;
+
+  padding: 5px 0;
+}
+
+.platform-doc-category {
+  width: 100%;
+}
+
+.platform-doc-category-row,
+.platform-doc-document-row {
+  width: 100%;
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  border: 0;
+
+  background: transparent;
+
+  text-align: left;
+
+  cursor: pointer;
+}
+
+.platform-doc-category-row {
+  height: 28px;
+
+  gap: 5px;
+
+  padding-right: 8px;
+
+  color: #344054;
+
+  font-size: 10px;
+  font-weight: 650;
+}
+
+.platform-doc-category-row:hover,
+.platform-doc-document-row:hover {
+  background: #edf4ff;
+}
+
+.platform-doc-category-row span {
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.platform-doc-document-row {
+  height: 27px;
+
+  gap: 5px;
+
+  padding-right: 8px;
+
+  color: #475467;
+
+  font-size: 10px;
+}
+
+.platform-doc-document-row.selected {
+  background: #dcecff;
+
+  color: #0f4fb8;
+}
+
+.platform-doc-code {
+  flex: 0 0 auto;
+
+  font-size: 8px;
+  font-weight: 700;
+}
+
+.platform-doc-document-title {
+  min-width: 0;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+/* ==========================================================
+   EDITOR 009
+   ========================================================== */
+
+.platform-documents-editor {
+  min-width: 0;
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  background: #ffffff;
+}
+
+.platform-documents-editor-header {
+  flex: 0 0 auto;
+
+  min-height: 62px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 16px;
+
+  padding: 9px 12px;
+
+  box-sizing: border-box;
+
+  border-bottom: 1px solid #e5e7eb;
+
+  background: #ffffff;
+}
+
+.platform-documents-editor-header h2 {
+  margin: 3px 0 0;
+
+  color: #101828;
+
+  font-size: 15px;
+  font-weight: 650;
+}
+
+.platform-documents-editor-meta {
+  color: #667085;
+
+  font-size: 9px;
+
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+
+/* ==========================================================
+   SAVE 010
+   ========================================================== */
+
+.platform-documents-save-area {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+}
+
+.platform-documents-save-area > span {
+  color: #2f8f2f;
+
+  font-size: 9px;
+  font-weight: 650;
+}
+
+.platform-documents-save-button {
+  height: 28px;
+
+  display: inline-flex;
+  align-items: center;
+
+  gap: 5px;
+
+  padding: 0 9px;
+
+  border: 1px solid #2563eb;
+  border-radius: 5px;
+
+  background: #2563eb;
+
+  color: #ffffff;
+
+  font-size: 10px;
+  font-weight: 650;
+
+  cursor: pointer;
+}
+
+.platform-documents-save-button:hover:not(:disabled) {
+  border-color: #1d4ed8;
+
+  background: #1d4ed8;
+}
+
+.platform-documents-save-button:disabled {
+  opacity: 0.5;
+
+  cursor: default;
+}
+
+
+/* ==========================================================
+   OTML EDITOR 011
+   ========================================================== */
+
+.platform-documents-editor-textarea {
+  flex: 1;
+  min-height: 0;
+
+  width: 100%;
+
+  resize: none;
+
+  box-sizing: border-box;
+
+  padding: 14px;
+
+  border: 0;
+
+  outline: none;
+
+  background: #ffffff;
+
+  color: #1f2937;
+
+  font-family:
+    "SFMono-Regular",
+    Consolas,
+    "Liberation Mono",
+    monospace;
+
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+
+/* ==========================================================
+   EMPTY STATES 012
+   ========================================================== */
+
+.platform-documents-empty,
+.platform-documents-empty-small {
+  color: #667085;
+
+  font-size: 10px;
+}
+
+.platform-documents-empty {
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 6px;
+
+  padding: 20px;
+
+  text-align: center;
+}
+
+.platform-documents-empty strong {
+  color: #344054;
+
+  font-size: 12px;
+}
+
+.platform-documents-empty-small {
+  padding: 12px;
+}
+
+
+/* ==========================================================
+   RESPONSIVE 013
+   ========================================================== */
+
+@media (max-width: 900px) {
+
+  .platform-documents-page {
+    padding: 16px;
+  }
+
+  .platform-documents-workspace {
+    grid-template-columns:
+      250px minmax(0, 1fr);
+  }
+
+}
+
+
+@media (max-width: 700px) {
+
+  .platform-documents-filters {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .platform-documents-filters label {
+    width: 100%;
+  }
+
+  .platform-documents-workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .platform-documents-explorer {
+    max-height: 280px;
+
+    border-right: 0;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+}

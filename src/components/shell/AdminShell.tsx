@@ -10,6 +10,7 @@ export type Page =
   | "dashboard"
   | "users"
   | "organizations"
+  | "documents"
   | "applications"
   | "roles"
   | "audit"

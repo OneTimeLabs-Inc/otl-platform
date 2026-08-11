@@ -12,6 +12,8 @@ import Users from "../features/users/Users";
 
 import Organizations from "../features/organizations/Organizations";
 
+import Documents from "../pages/documents/Documents";
+
 import type {
   Organization,
 } from "../types/organizations";
@@ -123,6 +125,16 @@ const [
   }}
 
 />
+
+        );
+
+
+
+      case "documents":
+
+        return (
+
+          <Documents />
 
         );
 

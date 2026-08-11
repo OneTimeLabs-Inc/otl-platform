@@ -25,18 +25,7 @@
    ========================================================== */
 
 .sidebar-header {
-    height: 64px;
-
-    display: flex;
-    align-items: center;
-
-    gap: 14px;
-
-    padding: 0 18px;
-
-    border-bottom: 1px solid #d8dde6;
-
-    background: white;
+    display: none;
 }
 
 .sidebar-logo {
@@ -89,7 +78,7 @@
 .sidebar-nav {
     flex: 1;
 
-    padding: 14px 10px;
+    padding: 8px 10px;
 
     overflow-y: auto;
 }
