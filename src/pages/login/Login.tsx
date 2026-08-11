@@ -12,7 +12,6 @@ import {
 
 import {
   signInWithGoogle,
-  signInWithMicrosoft,
 } from "../../services/auth";
 
 import "./Login.css";
