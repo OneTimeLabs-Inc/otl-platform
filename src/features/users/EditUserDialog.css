@@ -236,3 +236,110 @@
     background: #f4f6f8;
 
 }
+
+/* ==========================================================
+Organization Assignment
+========================================================== */
+
+.current-organization {
+    display: flex;
+    flex-direction: column;
+
+    gap: 4px;
+
+    margin-top: 20px;
+    padding: 14px 16px;
+
+    border: 1px solid var(--border);
+    border-radius: 8px;
+
+    background: var(--bg);
+}
+
+.current-organization span {
+    color: var(--muted);
+
+    font-size: 11px;
+    font-weight: 700;
+
+    letter-spacing: .08em;
+
+    text-transform: uppercase;
+}
+
+.current-organization strong {
+    color: var(--text);
+
+    font-size: 14px;
+    font-weight: 650;
+}
+
+.current-organization small {
+    color: var(--muted);
+
+    font-size: 12px;
+}
+
+
+/* ==========================================================
+Administration Error
+========================================================== */
+
+.user-admin-error {
+    margin-top: 16px;
+    padding: 12px 14px;
+
+    border: 1px solid #fecaca;
+    border-radius: 7px;
+
+    background: #fef2f2;
+
+    color: #991b1b;
+
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+
+/* ==========================================================
+Danger Button
+========================================================== */
+
+.danger-button {
+    width: 100%;
+    height: 42px;
+
+    margin-top: 18px;
+
+    border: 1px solid #fecaca;
+    border-radius: 7px;
+
+    background: #fff;
+
+    color: #b91c1c;
+
+    font-size: 13px;
+    font-weight: 650;
+
+    cursor: pointer;
+
+    transition:
+        background .15s,
+        border-color .15s,
+        box-shadow .15s;
+}
+
+.danger-button:hover:not(:disabled) {
+    border-color: #ef4444;
+
+    background: #fef2f2;
+
+    box-shadow:
+        0 0 0 3px rgba(239,68,68,.08);
+}
+
+.danger-button:disabled {
+    opacity: .55;
+
+    cursor: not-allowed;
+}

@@ -1,178 +1,294 @@
-import { supabase } from "../lib/supabase";
+import {
+  supabase,
+} from "../lib/supabase";
 
-import type { PlatformUser } from "../types/platformUser";
+import type {
+  PlatformUser,
+} from "../types/platformUser";
+
 
 /* ==========================================================
    PLATFORM USERS 001
    Load all platform users
    ========================================================== */
 
-export async function getPlatformUsers(): Promise<PlatformUser[]> {
-  const { data, error } = await supabase
-    .from("platform_users")
-    .select(`
-      id,
-      auth_user_id,
-      email,
-      display_name,
-      avatar_url,
-      active,
-      is_platform_admin,
-      is_employee,
-      last_login_at,
-      created_at,
-      updated_at,
-organization_members!fk_organization_members_platform_user (
-  organizations (
-    id,
-    name
-  ),
-  platform_roles!organization_members_role_id_fkey (
-    code,
-    display_name
-  )
-)
-    `)
-    .order("display_name", {
-      ascending: true,
-    });
+export async function getPlatformUsers():
+  Promise<PlatformUser[]> {
 
-  console.log(
-  "RAW PLATFORM USERS:",
-  JSON.stringify(data, null, 2),
-);
+  const {
+    data,
+    error,
+  } =
+    await supabase
+      .from("platform_users")
+      .select(`
+        id,
+        auth_user_id,
+        email,
+        display_name,
+        avatar_url,
+        active,
+        is_platform_admin,
+        is_employee,
+        last_login_at,
+        created_at,
+        updated_at,
+
+        organization_members!fk_organization_members_platform_user (
+          organizations (
+            id,
+            name
+          ),
+          platform_roles!organization_members_role_id_fkey (
+            code,
+            display_name
+          )
+        )
+      `)
+      .order(
+        "display_name",
+        {
+          ascending: true,
+        },
+      );
+
 
   if (error) {
+
     throw new Error(
       `Unable to load Platform users: ${error.message}`,
     );
+
   }
 
 
-  return (data ?? []).map((user) => {
-
-    const membership = Array.isArray(
-  user.organization_members,
-)
-  ? user.organization_members[0]
-  : user.organization_members;
-
-const organization =
-  Array.isArray(
-    membership?.organizations,
-  )
-    ? membership.organizations[0]
-    : membership?.organizations;
+  return (data ?? []).map(
+    (user) => {
 
 
-const role =
-  Array.isArray(
-    membership?.platform_roles,
-  )
-    ? membership.platform_roles[0]
-    : membership?.platform_roles;
+      /* ====================================================
+         MEMBERSHIP 002
+         Normalize organization membership
+         ==================================================== */
 
-    return {
-      id: user.id,
-      auth_user_id: user.auth_user_id,
-      email: user.email,
-      display_name: user.display_name,
-      avatar_url: user.avatar_url,
-      active: user.active,
-      is_platform_admin: user.is_platform_admin,
-      is_employee: user.is_employee,
-      last_login_at: user.last_login_at,
-      created_at: user.created_at,
-      updated_at: user.updated_at,
+      const membership =
+        Array.isArray(
+          user.organization_members,
+        )
+          ? user.organization_members[0]
+          : user.organization_members;
 
-organization_id:
-  organization?.id ?? null,
 
-organization_name:
-  organization?.name ?? null,
+      const organization =
+        Array.isArray(
+          membership?.organizations,
+        )
+          ? membership.organizations[0]
+          : membership?.organizations;
 
-organization_role:
-  role?.display_name ??
-  role?.code ??
-  null,
-    };
-  });
+
+      const role =
+        Array.isArray(
+          membership?.platform_roles,
+        )
+          ? membership.platform_roles[0]
+          : membership?.platform_roles;
+
+
+      /* ====================================================
+         PLATFORM USER 003
+         ==================================================== */
+
+      return {
+
+        id:
+          user.id,
+
+        auth_user_id:
+          user.auth_user_id,
+
+        email:
+          user.email,
+
+        display_name:
+          user.display_name,
+
+        avatar_url:
+          user.avatar_url,
+
+        active:
+          user.active,
+
+        is_platform_admin:
+          user.is_platform_admin,
+
+        is_employee:
+          user.is_employee,
+
+        last_login_at:
+          user.last_login_at,
+
+        created_at:
+          user.created_at,
+
+        updated_at:
+          user.updated_at,
+
+        organization_id:
+          organization?.id ?? null,
+
+        organization_name:
+          organization?.name ?? null,
+
+        organization_role:
+          role?.display_name ??
+          role?.code ??
+          null,
+
+      };
+
+    },
+  );
+
 }
 
+
 /* ==========================================================
-   PLATFORM USERS 002
+   PLATFORM USERS 004
    Get current platform user
    ========================================================== */
 
 export async function getCurrentPlatformUser() {
+
   const {
-    data: { user },
-  } = await supabase.auth.getUser();
+    data: {
+      user,
+    },
+  } =
+    await supabase.auth.getUser();
+
 
   if (!user) {
+
     return null;
+
   }
 
-  const { data } = await supabase
-    .from("platform_users")
-    .select("*")
-    .eq("auth_user_id", user.id)
-    .maybeSingle();
+
+  const {
+    data,
+    error,
+  } =
+    await supabase
+      .from("platform_users")
+      .select("*")
+      .eq(
+        "auth_user_id",
+        user.id,
+      )
+      .maybeSingle();
+
+
+  if (error) {
+
+    throw new Error(
+      `Unable to load current Platform user: ${error.message}`,
+    );
+
+  }
+
 
   return data;
+
 }
 
+
 /* ==========================================================
-   PLATFORM USERS 003
+   PLATFORM USERS 005
    Provision authenticated user
    ========================================================== */
 
 export async function provisionPlatformUser() {
+
   const {
-    data: { user },
-  } = await supabase.auth.getUser();
+    data: {
+      user,
+    },
+  } =
+    await supabase.auth.getUser();
+
 
   if (!user) {
+
     return;
+
   }
+
 
   const existing =
     await getCurrentPlatformUser();
 
+
   if (existing) {
+
     return existing;
+
   }
 
-  const { data, error } = await supabase
-    .from("platform_users")
-    .insert({
-      auth_user_id: user.id,
-      email: user.email,
-      display_name:
-        user.user_metadata?.full_name ??
-        user.user_metadata?.name ??
-        user.email,
-      avatar_url:
-        user.user_metadata?.avatar_url ??
-        null,
-      active: true,
-      is_employee: false,
-      is_platform_admin: false,
-    })
-    .select()
-    .single();
+
+  const {
+    data,
+    error,
+  } =
+    await supabase
+      .from("platform_users")
+      .insert({
+
+        auth_user_id:
+          user.id,
+
+        email:
+          user.email,
+
+        display_name:
+          user.user_metadata?.full_name ??
+          user.user_metadata?.name ??
+          user.email,
+
+        avatar_url:
+          user.user_metadata?.avatar_url ??
+          null,
+
+        active:
+          true,
+
+        is_employee:
+          false,
+
+        is_platform_admin:
+          false,
+
+      })
+      .select()
+      .single();
+
 
   if (error) {
+
     throw new Error(
       `Unable to provision platform user: ${error.message}`,
     );
+
   }
 
+
   return data;
+
 }
 
+
 /* ==========================================================
-   PLATFORM USERS 004
+   PLATFORM USERS 006
    Assign user to organization
    ========================================================== */
 
@@ -182,42 +298,96 @@ export async function assignUserToOrganization(
   roleId: string,
 ) {
 
-  /*
-    Check existing user membership
-  */
+
+  /* ========================================================
+     EXISTING MEMBERSHIP 007
+     ======================================================== */
 
   const {
     data: existingMembership,
     error: lookupError,
-  } = await supabase
-    .from("organization_members")
-    .select("id")
-    .eq(
-      "platform_user_id",
-      platformUserId,
-    )
-    .maybeSingle();
+  } =
+    await supabase
+      .from("organization_members")
+      .select("id")
+      .eq(
+        "platform_user_id",
+        platformUserId,
+      )
+      .maybeSingle();
 
 
   if (lookupError) {
+
     throw new Error(
       `Unable to check organization membership: ${lookupError.message}`,
     );
+
   }
 
 
-
-  /*
-    Update existing organization assignment
-  */
+  /* ========================================================
+     UPDATE MEMBERSHIP 008
+     Existing user moves or changes role
+     ======================================================== */
 
   if (existingMembership) {
 
     const {
       error,
-    } = await supabase
+    } =
+      await supabase
+        .from("organization_members")
+        .update({
+
+          organization_id:
+            organizationId,
+
+          role_id:
+            roleId,
+
+          status:
+            "active",
+
+          updated_at:
+            new Date().toISOString(),
+
+        })
+        .eq(
+          "id",
+          existingMembership.id,
+        );
+
+
+    if (error) {
+
+      throw new Error(
+        `Unable to update organization membership: ${error.message}`,
+      );
+
+    }
+
+
+    return;
+
+  }
+
+
+  /* ========================================================
+     CREATE MEMBERSHIP 009
+     Previously unassigned platform user
+     ======================================================== */
+
+  const {
+    error,
+  } =
+    await supabase
       .from("organization_members")
-      .update({
+      .insert({
+
+        platform_user_id:
+          platformUserId,
+
         organization_id:
           organizationId,
 
@@ -227,60 +397,63 @@ export async function assignUserToOrganization(
         status:
           "active",
 
-        updated_at:
+        joined_at:
           new Date().toISOString(),
-      })
-      .eq(
-        "id",
-        existingMembership.id,
-      );
 
-
-    if (error) {
-      throw new Error(
-        `Unable to update organization membership: ${error.message}`,
-      );
-    }
-
-
-    return;
-
-  }
-
-
-
-  /*
-    Create new membership
-  */
-
-  const {
-    error,
-  } = await supabase
-    .from("organization_members")
-    .insert({
-
-      platform_user_id:
-        platformUserId,
-
-      organization_id:
-        organizationId,
-
-      role_id:
-        roleId,
-
-      status:
-        "active",
-
-      joined_at:
-        new Date().toISOString(),
-
-    });
+      });
 
 
   if (error) {
+
     throw new Error(
       `Unable to assign organization membership: ${error.message}`,
     );
+
+  }
+
+}
+
+
+/* ==========================================================
+   PLATFORM USERS 010
+   Unassign user from organization
+   ========================================================== */
+
+export async function unassignUserFromOrganization(
+  platformUserId: string,
+) {
+
+
+  /*
+   * Remove organization membership only.
+   *
+   * This intentionally DOES NOT delete:
+   *
+   * - auth.users
+   * - platform_users
+   *
+   * The user remains a valid OneTime Labs platform identity
+   * but no longer has access to an organization workspace.
+   */
+
+  const {
+    error,
+  } =
+    await supabase
+      .from("organization_members")
+      .delete()
+      .eq(
+        "platform_user_id",
+        platformUserId,
+      );
+
+
+  if (error) {
+
+    throw new Error(
+      `Unable to unassign organization membership: ${error.message}`,
+    );
+
   }
 
 }

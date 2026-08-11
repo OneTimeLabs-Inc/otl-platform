@@ -23,45 +23,82 @@ import {
 
 import {
   assignUserToOrganization,
+  unassignUserFromOrganization,
 } from "../../services/platformUsers";
 
 import "./EditUserDialog.css";
 
 
-type Props = {
-  open: boolean;
-  user: PlatformUser | null;
+/* ==========================================================
+   EDIT USER DIALOG 001
+   Properties
+   ========================================================== */
 
-  onClose: () => void;
-  onSaved: () => void;
+type Props = {
+
+  open: boolean;
+
+  user:
+    PlatformUser | null;
+
+  onClose:
+    () => void;
+
+  onSaved:
+    () => void;
+
 };
 
 
+/* ==========================================================
+   EDIT USER DIALOG 002
+   ========================================================== */
+
 export default function EditUserDialog({
+
   open,
   user,
   onClose,
   onSaved,
+
 }: Props) {
+
+
+  /* ========================================================
+     AUTHENTICATION 003
+     ======================================================== */
 
   const {
     user: currentAuthUser,
-  } = useAuth();
+  } =
+    useAuth();
 
+
+  /* ========================================================
+     OPTIONS 004
+     ======================================================== */
 
   const [
     organizations,
     setOrganizations,
   ] =
-    useState<PlatformOrganization[]>([]);
+    useState<PlatformOrganization[]>(
+      [],
+    );
 
 
   const [
     roles,
     setRoles,
   ] =
-    useState<PlatformRole[]>([]);
+    useState<PlatformRole[]>(
+      [],
+    );
 
+
+  /* ========================================================
+     SELECTION 005
+     ======================================================== */
 
   const [
     selectedOrganization,
@@ -77,6 +114,10 @@ export default function EditUserDialog({
     useState("");
 
 
+  /* ========================================================
+     STATE 006
+     ======================================================== */
+
   const [
     loading,
     setLoading,
@@ -91,6 +132,23 @@ export default function EditUserDialog({
     useState(false);
 
 
+  const [
+    unassigning,
+    setUnassigning,
+  ] =
+    useState(false);
+
+
+  const [
+    error,
+    setError,
+  ] =
+    useState("");
+
+
+  /* ========================================================
+     PERMISSIONS 007
+     ======================================================== */
 
   const isCurrentUser =
     currentAuthUser?.id ===
@@ -107,21 +165,48 @@ export default function EditUserDialog({
     !isCurrentUser;
 
 
+  const hasOrganization =
+    Boolean(
+      user?.organization_id,
+    );
+
+
+  /* ========================================================
+     OPTIONS 008
+     Load organizations and roles
+     ======================================================== */
 
   useEffect(() => {
 
-    if (!open || !user || !canManageUser) {
+    if (
+      !open ||
+      !user ||
+      !canManageUser
+    ) {
+
       return;
+
     }
+
+
+    let active = true;
 
 
     async function loadOptions() {
 
       if (!user) {
-      return;
+
+        return;
+
       }
-      
-      setLoading(true);
+
+
+      setLoading(
+        true,
+      );
+
+      setError("");
+
 
       try {
 
@@ -130,14 +215,29 @@ export default function EditUserDialog({
           platformRoles,
         ] =
           await Promise.all([
+
             getPlatformOrganizations(),
+
             getPlatformRoles(),
+
           ]);
 
 
-        setOrganizations(orgs);
+        if (!active) {
 
-        setRoles(platformRoles);
+          return;
+
+        }
+
+
+        setOrganizations(
+          orgs,
+        );
+
+
+        setRoles(
+          platformRoles,
+        );
 
 
         setSelectedOrganization(
@@ -148,10 +248,13 @@ export default function EditUserDialog({
         const matchingRole =
           platformRoles.find(
             (role) =>
+
               role.display_name ===
-              user.organization_role ||
+                user.organization_role ||
+
               role.code ===
-              user.organization_role,
+                user.organization_role,
+
           );
 
 
@@ -159,10 +262,35 @@ export default function EditUserDialog({
           matchingRole?.id ?? "",
         );
 
+      }
+      catch (loadError) {
 
-      } finally {
+        console.error(
+          "Unable to load user administration options:",
+          loadError,
+        );
 
-        setLoading(false);
+
+        if (active) {
+
+          setError(
+            loadError instanceof Error
+              ? loadError.message
+              : "Unable to load user administration options.",
+          );
+
+        }
+
+      }
+      finally {
+
+        if (active) {
+
+          setLoading(
+            false,
+          );
+
+        }
 
       }
 
@@ -172,6 +300,13 @@ export default function EditUserDialog({
     void loadOptions();
 
 
+    return () => {
+
+      active = false;
+
+    };
+
+
   }, [
     open,
     user,
@@ -179,48 +314,165 @@ export default function EditUserDialog({
   ]);
 
 
-
-  if (!open || !user) {
-    return null;
-  }
-
-
-
-async function handleSave() {
+  /* ========================================================
+     CLOSED 009
+     ======================================================== */
 
   if (
-    !user ||
-    !selectedOrganization ||
-    !selectedRole
+    !open ||
+    !user
   ) {
-    return;
+
+    return null;
+
   }
 
 
-    setSaving(true);
+  /* ========================================================
+     SAVE 010
+     Assign or update organization membership
+     ======================================================== */
+
+  async function handleSave() {
+
+    if (
+      !user ||
+      !canManageUser ||
+      !selectedOrganization ||
+      !selectedRole
+    ) {
+
+      return;
+
+    }
+
+
+    setSaving(
+      true,
+    );
+
+    setError("");
 
 
     try {
 
       await assignUserToOrganization(
+
         user.id,
+
         selectedOrganization,
+
         selectedRole,
+
       );
 
 
       onSaved();
 
+    }
+    catch (saveError) {
 
-    } finally {
+      console.error(
+        "Unable to save user organization access:",
+        saveError,
+      );
 
-      setSaving(false);
+
+      setError(
+        saveError instanceof Error
+          ? saveError.message
+          : "Unable to save organization access.",
+      );
+
+    }
+    finally {
+
+      setSaving(
+        false,
+      );
 
     }
 
   }
 
 
+  /* ========================================================
+     UNASSIGN 011
+     Remove organization membership
+     ======================================================== */
+
+  async function handleUnassign() {
+
+    if (
+      !user ||
+      !canManageUser ||
+      !user.organization_id
+    ) {
+
+      return;
+
+    }
+
+
+    const confirmed =
+      window.confirm(
+        `Unassign ${user.email} from ${user.organization_name ?? "their organization"}?\n\nThe user will remain active on the OneTime Labs platform but will lose access to the organization's OTLES workspace.`,
+      );
+
+
+    if (!confirmed) {
+
+      return;
+
+    }
+
+
+    setUnassigning(
+      true,
+    );
+
+    setError("");
+
+
+    try {
+
+      await unassignUserFromOrganization(
+        user.id,
+      );
+
+
+      onSaved();
+
+    }
+    catch (unassignError) {
+
+      console.error(
+        "Unable to unassign user:",
+        unassignError,
+      );
+
+
+      setError(
+        unassignError instanceof Error
+          ? unassignError.message
+          : "Unable to unassign user.",
+      );
+
+    }
+    finally {
+
+      setUnassigning(
+        false,
+      );
+
+    }
+
+  }
+
+
+  /* ========================================================
+     RENDER 012
+     ======================================================== */
 
   return (
 
@@ -229,14 +481,20 @@ async function handleSave() {
       <div className="edit-user-dialog">
 
 
+        {/* ==================================================
+            HEADER 013
+            ================================================== */}
+
         <div className="dialog-header">
 
           <div>
 
             <h2>
+
               {canManageUser
                 ? "Manage User"
                 : "Account Information"}
+
             </h2>
 
             <p>
@@ -247,8 +505,15 @@ async function handleSave() {
 
 
           <button
+            type="button"
             className="dialog-close"
-            onClick={onClose}
+            onClick={
+              onClose
+            }
+            disabled={
+              saving ||
+              unassigning
+            }
           >
             ✕
           </button>
@@ -256,6 +521,9 @@ async function handleSave() {
         </div>
 
 
+        {/* ==================================================
+            BODY 014
+            ================================================== */}
 
         <div className="dialog-body">
 
@@ -265,7 +533,9 @@ async function handleSave() {
             {user.avatar_url ? (
 
               <img
-                src={user.avatar_url}
+                src={
+                  user.avatar_url
+                }
                 alt={
                   user.display_name ??
                   "User"
@@ -281,7 +551,6 @@ async function handleSave() {
             )}
 
           </div>
-
 
 
           <div className="form-group">
@@ -300,7 +569,6 @@ async function handleSave() {
           </div>
 
 
-
           <div className="form-group">
 
             <label>
@@ -317,7 +585,6 @@ async function handleSave() {
           </div>
 
 
-
           <div className="form-group">
 
             <label>
@@ -332,13 +599,16 @@ async function handleSave() {
           </div>
 
 
-
+          {/* ==================================================
+              ADMINISTRATION 015
+              ================================================== */}
 
           {canManageUser && (
 
             <>
 
               <hr />
+
 
               <div className="admin-section">
 
@@ -369,9 +639,13 @@ async function handleSave() {
                         value={
                           selectedOrganization
                         }
-                        onChange={(e) =>
+                        disabled={
+                          saving ||
+                          unassigning
+                        }
+                        onChange={(event) =>
                           setSelectedOrganization(
-                            e.target.value,
+                            event.target.value,
                           )
                         }
                       >
@@ -405,7 +679,6 @@ async function handleSave() {
                     </div>
 
 
-
                     <div className="form-group">
 
                       <label>
@@ -417,9 +690,13 @@ async function handleSave() {
                         value={
                           selectedRole
                         }
-                        onChange={(e) =>
+                        disabled={
+                          saving ||
+                          unassigning
+                        }
+                        onChange={(event) =>
                           setSelectedRole(
-                            e.target.value,
+                            event.target.value,
                           )
                         }
                       >
@@ -453,6 +730,72 @@ async function handleSave() {
                     </div>
 
 
+                    {/* ========================================
+                        CURRENT ASSIGNMENT 016
+                        ======================================== */}
+
+                    {hasOrganization && (
+
+                      <div className="current-organization">
+
+                        <span>
+                          Current Assignment
+                        </span>
+
+                        <strong>
+                          {user.organization_name}
+                        </strong>
+
+                        <small>
+                          {user.organization_role ??
+                            "No role assigned"}
+                        </small>
+
+                      </div>
+
+                    )}
+
+
+                    {/* ========================================
+                        ERROR 017
+                        ======================================== */}
+
+                    {error && (
+
+                      <div className="user-admin-error">
+                        {error}
+                      </div>
+
+                    )}
+
+
+                    {/* ========================================
+                        UNASSIGN 018
+                        ======================================== */}
+
+                    {hasOrganization && (
+
+                      <button
+                        type="button"
+                        className="danger-button"
+                        disabled={
+                          saving ||
+                          unassigning
+                        }
+                        onClick={() => {
+                          void handleUnassign();
+                        }}
+                      >
+
+                        {unassigning
+                          ? "Unassigning..."
+                          : "Unassign User"}
+
+                      </button>
+
+                    )}
+
+
                   </>
 
                 )}
@@ -467,30 +810,49 @@ async function handleSave() {
         </div>
 
 
+        {/* ==================================================
+            FOOTER 019
+            ================================================== */}
 
         <div className="dialog-footer">
 
 
           <button
+            type="button"
             className="secondary-button"
-            onClick={onClose}
-            disabled={saving}
+            onClick={
+              onClose
+            }
+            disabled={
+              saving ||
+              unassigning
+            }
           >
             Cancel
           </button>
 
 
           <button
+            type="button"
             className="primary-button"
-            onClick={handleSave}
+            onClick={() => {
+              void handleSave();
+            }}
             disabled={
               saving ||
-              !canManageUser
+              unassigning ||
+              !canManageUser ||
+              !selectedOrganization ||
+              !selectedRole
             }
           >
+
             {saving
               ? "Saving..."
-              : "Save"}
+              : hasOrganization
+                ? "Save Changes"
+                : "Assign User"}
+
           </button>
 
 
@@ -502,4 +864,5 @@ async function handleSave() {
     </div>
 
   );
+
 }
