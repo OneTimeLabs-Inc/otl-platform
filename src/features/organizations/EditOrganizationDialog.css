@@ -1,98 +1,271 @@
 /* ==========================================================
-   ORGANIZATION DIALOG 001
-   Container
+   EDIT ORGANIZATION DIALOG
+   Platform organization create/edit modal
+   ========================================================== */
+
+
+/* ==========================================================
+   BACKDROP 001
+   Full-screen modal layer
+   ========================================================== */
+
+.dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 24px;
+
+  box-sizing: border-box;
+
+  background: rgba(15, 23, 42, 0.38);
+}
+
+
+/* ==========================================================
+   DIALOG 002
+   Main modal container
    ========================================================== */
 
 .edit-organization-dialog {
-  width: 420px;
+  width: min(420px, 100%);
+  max-height: calc(100vh - 48px);
 
-  background: white;
+  display: flex;
+  flex-direction: column;
 
-  border: 1px solid #d5d5d5;
-  border-radius: 8px;
+  background: #ffffff;
+
+  border: 1px solid #d8dee8;
+  border-radius: 10px;
 
   box-shadow:
-    0 8px 24px rgba(0, 0, 0, 0.15);
+    0 18px 50px rgba(15, 23, 42, 0.18);
 
   overflow: hidden;
 }
 
 
 /* ==========================================================
-   ORGANIZATION DIALOG 002
-   Form
+   HEADER 003
+   ========================================================== */
+
+.edit-organization-dialog .dialog-header {
+  flex: 0 0 auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  min-height: 52px;
+
+  padding: 0 16px;
+
+  border-bottom: 1px solid #e5e7eb;
+
+  background: #ffffff;
+}
+
+.edit-organization-dialog .dialog-header h2 {
+  margin: 0;
+
+  color: #111827;
+
+  font-size: 16px;
+  font-weight: 650;
+  line-height: 1.2;
+}
+
+.edit-organization-dialog .dialog-close {
+  width: 28px;
+  height: 28px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  margin: 0;
+  padding: 0;
+
+  border: 1px solid transparent;
+  border-radius: 6px;
+
+  background: transparent;
+
+  color: #667085;
+
+  font-size: 14px;
+  line-height: 1;
+
+  cursor: pointer;
+}
+
+.edit-organization-dialog .dialog-close:hover {
+  border-color: #d8dee8;
+
+  background: #f8fafc;
+
+  color: #111827;
+}
+
+
+/* ==========================================================
+   BODY 004
+   ========================================================== */
+
+.edit-organization-dialog .dialog-body {
+  flex: 1 1 auto;
+
+  min-height: 0;
+
+  padding: 16px;
+
+  overflow-y: auto;
+
+  background: #ffffff;
+}
+
+
+/* ==========================================================
+   ERROR 005
+   ========================================================== */
+
+.edit-organization-dialog .dialog-error {
+  margin-bottom: 14px;
+  padding: 9px 10px;
+
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+
+  background: #fef2f2;
+
+  color: #b42318;
+
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+
+/* ==========================================================
+   FORM 006
    ========================================================== */
 
 .edit-organization-dialog .form-group {
   display: flex;
   flex-direction: column;
 
-  gap: 6px;
+  gap: 5px;
 
   margin-bottom: 14px;
 }
 
-
-.edit-organization-dialog label {
-  font-size: 13px;
-  font-weight: 600;
+.edit-organization-dialog .form-group:last-of-type {
+  margin-bottom: 0;
 }
 
+.edit-organization-dialog label {
+  color: #344054;
 
-.edit-organization-dialog input {
-  padding: 8px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.3;
+}
 
-  border: 1px solid #ccc;
-  border-radius: 4px;
+.edit-organization-dialog input[type="text"],
+.edit-organization-dialog input:not([type]) {
+  width: 100%;
+  height: 36px;
 
-  font-size: 14px;
+  padding: 0 10px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #d0d5dd;
+  border-radius: 6px;
+
+  outline: none;
+
+  background: #ffffff;
+
+  color: #101828;
+
+  font-size: 13px;
+
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
+}
+
+.edit-organization-dialog input[type="text"]:focus,
+.edit-organization-dialog input:not([type]):focus {
+  border-color: #2563eb;
+
+  box-shadow:
+    0 0 0 3px rgba(37, 99, 235, 0.10);
 }
 
 
 /* ==========================================================
-   ORGANIZATION DIALOG 003
-   Checkbox
+   CHECKBOX 007
    ========================================================== */
 
 .edit-organization-dialog .checkbox-group {
-  margin-top: 12px;
+  margin-top: 16px;
+}
 
-  font-size: 13px;
+.edit-organization-dialog .checkbox-group label {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 8px;
+
+  color: #475467;
+
+  font-size: 12px;
+  font-weight: 500;
+
+  cursor: pointer;
+}
+
+.edit-organization-dialog .checkbox-group input[type="checkbox"] {
+  width: 15px;
+  height: 15px;
+
+  margin: 0;
+
+  accent-color: #2563eb;
+
+  cursor: pointer;
 }
 
 
-.edit-organization-dialog .checkbox-group label {
+/* ==========================================================
+   FOOTER 008
+   Delete left, Cancel/Save right
+   ========================================================== */
+
+.edit-organization-dialog .dialog-footer {
+  flex: 0 0 auto;
+
   display: flex;
   align-items: center;
 
   gap: 8px;
 
-  font-weight: normal;
+  min-height: 54px;
+
+  padding: 9px 16px;
+
+  box-sizing: border-box;
+
+  border-top: 1px solid #e5e7eb;
+
+  background: #f8fafc;
 }
-
-
-/* ==========================================================
-   ORGANIZATION DIALOG 004
-   Footer
-   ========================================================== */
-
-.edit-organization-dialog .dialog-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  padding: 12px 16px;
-
-  border-top: 1px solid #ddd;
-
-  background: #fafafa;
-}
-
-
-/* ==========================================================
-   ORGANIZATION DIALOG 005
-   Footer Actions
-   ========================================================== */
 
 .edit-organization-dialog .footer-actions {
   display: flex;
@@ -105,163 +278,129 @@
 
 
 /* ==========================================================
-   ORGANIZATION DIALOG 006
-   ALL Footer Buttons
-   Force identical geometry
+   BUTTON BASE 009
+   Identical footer button geometry
    ========================================================== */
 
-.edit-organization-dialog .dialog-footer > button,
-.edit-organization-dialog .footer-actions > button {
+.edit-organization-dialog .dialog-footer button {
+  height: 32px;
+
   display: inline-flex;
   align-items: center;
   justify-content: center;
 
-  height: 38px;
-
   margin: 0;
-  padding: 0 16px;
+  padding: 0 12px;
 
   box-sizing: border-box;
 
+  border-radius: 6px;
+
+  font-size: 12px;
+  font-weight: 600;
   line-height: 1;
 
-  border-radius: 8px;
-
-  font-size: 14px;
-  font-weight: 600;
-}
-
-
-/* ==========================================================
-   ORGANIZATION DIALOG 007
-   Delete Button
-   ========================================================== */
-
-.edit-organization-dialog .danger-button {
-  border: 1px solid #ef4444;
-
-  background: #fc6666;
-
-  color: white;
-
   cursor: pointer;
+
+  transition:
+    background 0.15s,
+    border-color 0.15s,
+    color 0.15s,
+    opacity 0.15s;
 }
 
-.edit-organization-dialog .danger-button:hover:not(:disabled) {
-  background: #b91c1c;
-}
-
-.edit-organization-dialog .danger-button:disabled {
-  opacity: .6;
+.edit-organization-dialog .dialog-footer button:disabled {
+  opacity: 0.55;
 
   cursor: not-allowed;
 }
 
 
 /* ==========================================================
-   ORGANIZATION DIALOG 008
-   Save Button
+   CANCEL BUTTON 010
+   ========================================================== */
+
+.edit-organization-dialog .secondary-button {
+  min-width: 68px;
+
+  border: 1px solid #d0d5dd;
+
+  background: #ffffff;
+
+  color: #344054;
+}
+
+.edit-organization-dialog .secondary-button:hover:not(:disabled) {
+  border-color: #b8c0cc;
+
+  background: #f2f4f7;
+}
+
+
+/* ==========================================================
+   SAVE BUTTON 011
    ========================================================== */
 
 .edit-organization-dialog .save-button {
-  min-width: 100px;
+  min-width: 68px;
 
   border: 1px solid #2563eb;
 
   background: #2563eb;
 
-  color: white;
-
-  cursor: pointer;
+  color: #ffffff;
 }
 
 .edit-organization-dialog .save-button:hover:not(:disabled) {
-  background: #1d4ed8;
-}
+  border-color: #1d4ed8;
 
-.edit-organization-dialog .save-button:disabled {
-  opacity: .6;
-
-  cursor: not-allowed;
-}
-
-
-/* ==========================================================
-   ORGANIZATION DIALOG 005
-   Save Button
-   ========================================================== */
-
-.save-button {
-  height: 38px;
-  min-width: 100px;
-
-  padding: 0 16px;
-
-  border: none;
-  border-radius: 8px;
-
-  background: #2563eb;
-
-  color: white;
-
-  font-size: 14px;
-  font-weight: 600;
-
-  cursor: pointer;
-
-  transition:
-    background .15s,
-    opacity .15s;
-}
-
-
-.save-button:hover:not(:disabled) {
   background: #1d4ed8;
 }
 
 
-.save-button:disabled {
-  opacity: .6;
-
-  cursor: not-allowed;
-}
-
-
 /* ==========================================================
-   ORGANIZATION DIALOG 006
-   Danger Button
+   DELETE BUTTON 012
    ========================================================== */
 
 .edit-organization-dialog .danger-button {
-  height: 38px;
+  min-width: 68px;
 
-  padding: 0 18px;
+  border: 1px solid #dc2626;
 
-  border: none;
-  border-radius: 8px;
+  background: #ffffff;
 
-  background: #fc6666;
-
-  color: white;
-
-  font-size: 14px;
-  font-weight: 600;
-
-  cursor: pointer;
-
-  transition:
-    background .15s,
-    opacity .15s;
+  color: #dc2626;
 }
-
 
 .edit-organization-dialog .danger-button:hover:not(:disabled) {
-  background: #b91c1c;
+  border-color: #b91c1c;
+
+  background: #fef2f2;
+
+  color: #b91c1c;
 }
 
 
-.edit-organization-dialog .danger-button:disabled {
-  opacity: .6;
+/* ==========================================================
+   RESPONSIVE 013
+   ========================================================== */
 
-  cursor: not-allowed;
+@media (max-width: 520px) {
+
+  .dialog-backdrop {
+    padding: 12px;
+  }
+
+  .edit-organization-dialog {
+    width: 100%;
+    max-height: calc(100vh - 24px);
+  }
+
+  .edit-organization-dialog .dialog-header,
+  .edit-organization-dialog .dialog-body,
+  .edit-organization-dialog .dialog-footer {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
 }
