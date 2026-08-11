@@ -12,19 +12,24 @@
 
     gap: 24px;
 
+    box-sizing: border-box;
+
     overflow: hidden;
 }
 
 
 /* ==========================================================
-   HEADER 001
+   HEADER 002
    ========================================================== */
 
 .users-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
+
+    flex-shrink: 0;
 }
+
 
 .users-header h1 {
     margin: 0;
@@ -35,8 +40,9 @@
     color: #111827;
 }
 
+
 .users-header p {
-    margin-top: 6px;
+    margin: 6px 0 0;
 
     color: #6b7280;
 
@@ -45,7 +51,7 @@
 
 
 /* ==========================================================
-   BUTTONS 001
+   BUTTONS 003
    ========================================================== */
 
 .primary-button {
@@ -68,102 +74,192 @@
     transition: .15s;
 }
 
+
 .primary-button:hover {
     background: #1d4ed8;
 }
 
 
 /* ==========================================================
-   TABLE 001
+   CONTENT 004
+   ========================================================== */
+
+.users-content {
+    display: flex;
+    flex-direction: column;
+
+    flex: 1;
+
+    gap: 28px;
+
+    min-height: 0;
+
+    padding-right: 4px;
+
+    overflow-y: auto;
+}
+
+
+/* ==========================================================
+   SECTION 005
+   ========================================================== */
+
+.user-section {
+    display: flex;
+    flex-direction: column;
+
+    gap: 12px;
+
+    flex-shrink: 0;
+}
+
+
+.user-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    min-height: 44px;
+}
+
+
+.user-section-header h2 {
+    margin: 0;
+
+    color: #111827;
+
+    font-size: 16px;
+    font-weight: 700;
+}
+
+
+.user-section-header p {
+    margin: 4px 0 0;
+
+    color: #6b7280;
+
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+
+.section-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 30px;
+    height: 26px;
+
+    padding: 0 9px;
+
+    box-sizing: border-box;
+
+    border: 1px solid #d8dde6;
+    border-radius: 999px;
+
+    background: #f4f6f9;
+
+    color: #4b5563;
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+
+/* ==========================================================
+   TABLE 006
    ========================================================== */
 
 .users-table {
     display: flex;
     flex-direction: column;
 
-    flex: 1;
+    width: 100%;
 
-    overflow: auto;
+    overflow: hidden;
 
     background: white;
 
     border: 1px solid #d8dde6;
-
-    border-radius: 10px;
+    border-radius: 8px;
 }
 
 
 /* ==========================================================
-   HEADER ROW 001
+   TABLE HEADER 007
    ========================================================== */
 
 .users-table-header {
     display: grid;
 
     grid-template-columns:
+        minmax(180px, 1.1fr)
+        minmax(240px, 1.4fr)
+        minmax(180px, 1fr)
+        minmax(150px, .8fr)
+        110px;
 
-        220px
-        280px
-        220px
-        150px
-        170px
-        120px;
-
-    min-height: 42px;
+    min-height: 38px;
 
     align-items: center;
 
-    padding: 0 18px;
+    padding: 0 16px;
+
+    box-sizing: border-box;
 
     background: #f4f6f9;
 
     border-bottom: 1px solid #d8dde6;
 
-    font-size: 12px;
-    font-weight: 700;
-
     color: #4b5563;
+
+    font-size: 11px;
+    font-weight: 700;
 
     text-transform: uppercase;
 
     letter-spacing: .05em;
-
-    position: sticky;
-
-    top: 0;
-
-    z-index: 5;
 }
 
 
 /* ==========================================================
-   DATA ROWS 001
+   DATA ROWS 008
    ========================================================== */
 
 .users-row {
     display: grid;
 
     grid-template-columns:
+        minmax(180px, 1.1fr)
+        minmax(240px, 1.4fr)
+        minmax(180px, 1fr)
+        minmax(150px, .8fr)
+        110px;
 
-        220px
-        280px
-        220px
-        150px
-        170px
-        120px;
-
-    min-height: 48px;
+    min-height: 46px;
 
     align-items: center;
 
-    padding: 0 18px;
+    padding: 0 16px;
+
+    box-sizing: border-box;
 
     border-bottom: 1px solid #eef2f7;
 
-    transition: background .15s;
+    color: #374151;
 
-    font-size: 14px;
+    font-size: 13px;
+
+    transition:
+        background .15s;
 }
+
+
+.users-row:last-child {
+    border-bottom: none;
+}
+
 
 .users-row:hover {
     background: #edf4ff;
@@ -173,39 +269,51 @@
 
 
 /* ==========================================================
-   CELLS 001
+   CELLS 009
    ========================================================== */
 
 .users-row > div,
 .users-table-header > div {
+    min-width: 0;
 
     overflow: hidden;
 
     white-space: nowrap;
 
     text-overflow: ellipsis;
+}
 
+
+.user-name {
+    color: #111827;
+
+    font-weight: 600;
+}
+
+
+.user-email-cell {
+    color: #4b5563;
 }
 
 
 /* ==========================================================
-   BADGES 001
+   BADGES 010
    ========================================================== */
 
 .badge {
     display: inline-flex;
-
     align-items: center;
 
-    height: 24px;
+    height: 22px;
 
-    padding: 0 10px;
+    padding: 0 9px;
 
     border-radius: 999px;
 
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 600;
 }
+
 
 .badge.blue {
     background: #dbeafe;
@@ -213,17 +321,20 @@
     color: #1d4ed8;
 }
 
+
 .badge.green {
     background: #dcfce7;
 
     color: #15803d;
 }
 
+
 .badge.orange {
     background: #fef3c7;
 
     color: #b45309;
 }
+
 
 .badge.gray {
     background: #f3f4f6;
@@ -233,7 +344,161 @@
 
 
 /* ==========================================================
-   LOADING 001
+   EMPTY STATES 011
+   ========================================================== */
+
+.users-empty,
+.organizations-empty {
+    display: flex;
+    align-items: center;
+
+    min-height: 54px;
+
+    padding: 0 16px;
+
+    box-sizing: border-box;
+
+    color: #9ca3af;
+
+    font-size: 13px;
+}
+
+
+/* ==========================================================
+   ORGANIZATIONS 012
+   ========================================================== */
+
+.organizations-section {
+    padding-bottom: 28px;
+}
+
+
+.organization-list {
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+
+    border: 1px solid #d8dde6;
+    border-radius: 8px;
+
+    background: white;
+}
+
+
+.organization-group {
+    border-bottom: 1px solid #d8dde6;
+}
+
+
+.organization-group:last-child {
+    border-bottom: none;
+}
+
+
+/* ==========================================================
+   ORGANIZATION HEADER 013
+   ========================================================== */
+
+.organization-group-header {
+    display: flex;
+    align-items: center;
+
+    width: 100%;
+    min-height: 48px;
+
+    padding: 0 16px;
+
+    border: none;
+
+    background: white;
+
+    color: #111827;
+
+    font-family: inherit;
+
+    cursor: pointer;
+
+    text-align: left;
+
+    transition:
+        background .15s;
+}
+
+
+.organization-group-header:hover {
+    background: #f8fafc;
+}
+
+
+.organization-chevron {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 24px;
+
+    margin-right: 8px;
+
+    color: #6b7280;
+
+    flex-shrink: 0;
+}
+
+
+.organization-group-name {
+    flex: 1;
+
+    min-width: 0;
+
+    overflow: hidden;
+
+    white-space: nowrap;
+
+    text-overflow: ellipsis;
+
+    font-size: 14px;
+    font-weight: 700;
+}
+
+
+.organization-user-count {
+    margin-left: 16px;
+
+    color: #6b7280;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    flex-shrink: 0;
+}
+
+
+/* ==========================================================
+   ORGANIZATION USERS 014
+   ========================================================== */
+
+.organization-users {
+    border-top: 1px solid #eef2f7;
+
+    background: #fff;
+}
+
+
+.organization-users .users-table-header {
+    padding-left: 48px;
+
+    background: #fafbfc;
+}
+
+
+.organization-users .users-row {
+    padding-left: 48px;
+}
+
+
+/* ==========================================================
+   LOADING 015
    ========================================================== */
 
 .users-loading {
@@ -243,5 +508,50 @@
 
     flex: 1;
 
+    min-height: 200px;
+
     color: #6b7280;
+
+    font-size: 14px;
+}
+
+
+/* ==========================================================
+   RESPONSIVE 016
+   ========================================================== */
+
+@media (max-width: 1100px) {
+
+    .users-table {
+        overflow-x: auto;
+    }
+
+
+    .users-table-header,
+    .users-row {
+        grid-template-columns:
+            180px
+            240px
+            180px
+            150px
+            110px;
+
+        min-width: 860px;
+    }
+
+
+    .organization-users {
+        overflow-x: auto;
+    }
+
+}
+
+/* ==========================================================
+   PLATFORM OWNER
+   ========================================================== */
+
+.badge.owner {
+    background: #ede9fe;
+
+    color: #6d28d9;
 }

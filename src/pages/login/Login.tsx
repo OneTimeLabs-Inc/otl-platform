@@ -1,102 +1,255 @@
+import {
+  useState,
+} from "react";
+
+import {
+  FcGoogle,
+} from "react-icons/fc";
+
+import {
+  FaMicrosoft,
+} from "react-icons/fa";
+
+import {
+  signInWithGoogle,
+  signInWithMicrosoft,
+} from "../../services/auth";
+
 import "./Login.css";
 
-import { FcGoogle } from "react-icons/fc";
-import { FaMicrosoft } from "react-icons/fa";
 
-import { signInWithGoogle } from "../../services/auth";
+/* ==========================================================
+   PLATFORM LOGIN 001
+   OAuth-only authentication
+   ========================================================== */
 
 export default function Login() {
-  return (
-    <main className="login-page">
-      <section className="login-hero">
-        <div className="hero-content">
-          <h1>OTLES: Platform</h1>
 
-          <p className="hero-tagline">
-            A modern platform for technical documentation.
-          </p>
+
+  /* ========================================================
+     STATE 002
+     ======================================================== */
+
+  const [
+    signingIn,
+    setSigningIn,
+  ] =
+    useState<
+      "google" |
+      "microsoft" |
+      null
+    >(null);
+
+
+  const [
+    error,
+    setError,
+  ] =
+    useState("");
+
+
+  /* ========================================================
+     GOOGLE 003
+     ======================================================== */
+
+  async function handleGoogleSignIn() {
+
+    setSigningIn(
+      "google",
+    );
+
+    setError("");
+
+
+    try {
+
+      const {
+        error: authError,
+      } =
+        await signInWithGoogle();
+
+
+      if (authError) {
+
+        throw authError;
+
+      }
+
+    }
+    catch (signInError) {
+
+      console.error(
+        "Google sign-in failed:",
+        signInError,
+      );
+
+
+      setError(
+        signInError instanceof Error
+          ? signInError.message
+          : "Unable to sign in with Google.",
+      );
+
+
+      setSigningIn(
+        null,
+      );
+
+    }
+
+  }
+
+
+
+  /* ========================================================
+     RENDER 005
+     ======================================================== */
+
+  return (
+
+    <main className="login-page">
+
+
+      {/* ====================================================
+          HERO 006
+          ==================================================== */}
+
+      <section className="login-hero">
+
+        <div className="hero-content">
+
+          <h1>
+            OTLES: Platform
+          </h1>
 
           <div className="hero-divider" />
-
-          <h2>Write.</h2>
-
-          <h2>Publish.</h2>
-
-          <h2>Collaborate.</h2>
-
           <p className="hero-body">
-            Create structured documentation using the
-            OneTime Labs Markup Language (OTML),
-            organize it into reusable workspaces,
-            and publish professional documentation
-            from a single platform.
+
+            Manage organizations, users,
+            applications, roles, and platform
+            access across the OneTime Labs
+            ecosystem.
+
           </p>
+
         </div>
+
       </section>
+
+
+      {/* ====================================================
+          LOGIN PANEL 007
+          ==================================================== */}
 
       <section className="login-panel">
 
         <div className="login-card">
 
-          <h2>Welcome to OTLES</h2>
+
+          <h2>
+            Platform Sign In
+          </h2>
+
 
           <p className="login-description">
-            Sign in to your documentation workspace.
+
+            Sign in with an authorized identity
+            provider to access Platform.
+
           </p>
 
-<button
-  className="google-button"
-  onClick={() => void signInWithGoogle()}
->
-  <FcGoogle size={20} />
-  <span>Continue with Google</span>
-</button>
+
+          {/* ==================================================
+              GOOGLE 008
+              ================================================== */}
 
           <button
-            className="microsoft-button"
-            disabled
+            type="button"
+            className="google-button"
+            disabled={
+              signingIn !== null
+            }
+            onClick={() => {
+              void handleGoogleSignIn();
+            }}
           >
-            <FaMicrosoft size={18} />
-            <span>Continue with Microsoft</span>
+
+            <FcGoogle
+              size={20}
+            />
+
+            <span>
+
+              {signingIn === "google"
+                ? "Connecting..."
+                : "Continue with Google"}
+
+            </span>
+
           </button>
 
-          <div className="login-separator">
-            <span>OR</span>
+
+{/* ==================================================
+    MICROSOFT 009
+    OAuth provider not yet configured
+    ================================================== */}
+
+<button
+  type="button"
+  className="microsoft-button"
+  disabled
+>
+  <FaMicrosoft
+    size={18}
+  />
+
+  <span>
+    Continue with Microsoft
+  </span>
+</button>
+
+
+          {/* ==================================================
+              ERROR 010
+              ================================================== */}
+
+          {error && (
+
+            <div className="login-error">
+              {error}
+            </div>
+
+          )}
+
+
+          {/* ==================================================
+              ACCESS NOTICE 011
+              ================================================== */}
+
+          <div className="login-access-notice">
+
+            <strong>
+              Authorized Access Only
+            </strong>
+
+            <p>
+
+              Platform access is restricted to
+              authorized OneTime Labs platform
+              administrators.
+
+            </p>
+
           </div>
 
-          <input
-            type="email"
-            placeholder="Email"
-          />
-
-          <input
-            type="password"
-            placeholder="Password"
-          />
-
-          <label className="remember-me">
-            <input type="checkbox" />
-            Remember me
-          </label>
-
-          <button className="signin-button">
-            Sign In
-          </button>
-
-          <button className="link-button">
-            Forgot Password?
-          </button>
-
-          <div className="create-account">
-            Don't have an account?
-            <button className="link-button">
-              Create Account
-            </button>
-          </div>
 
         </div>
 
       </section>
+
+
     </main>
+
   );
+
 }

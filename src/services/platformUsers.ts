@@ -28,6 +28,7 @@ export async function getPlatformUsers():
         display_name,
         avatar_url,
         active,
+        is_platform_owner,
         is_platform_admin,
         is_employee,
         last_login_at,
@@ -65,12 +66,6 @@ export async function getPlatformUsers():
   return (data ?? []).map(
     (user) => {
 
-
-      /* ====================================================
-         MEMBERSHIP 002
-         Normalize organization membership
-         ==================================================== */
-
       const membership =
         Array.isArray(
           user.organization_members,
@@ -95,10 +90,6 @@ export async function getPlatformUsers():
           : membership?.platform_roles;
 
 
-      /* ====================================================
-         PLATFORM USER 003
-         ==================================================== */
-
       return {
 
         id:
@@ -118,6 +109,9 @@ export async function getPlatformUsers():
 
         active:
           user.active,
+
+        is_platform_owner:
+          user.is_platform_owner,
 
         is_platform_admin:
           user.is_platform_admin,
@@ -154,11 +148,12 @@ export async function getPlatformUsers():
 
 
 /* ==========================================================
-   PLATFORM USERS 004
+   PLATFORM USERS 002
    Get current platform user
    ========================================================== */
 
-export async function getCurrentPlatformUser() {
+export async function getCurrentPlatformUser():
+  Promise<PlatformUser | null> {
 
   const {
     data: {
@@ -181,7 +176,20 @@ export async function getCurrentPlatformUser() {
   } =
     await supabase
       .from("platform_users")
-      .select("*")
+      .select(`
+        id,
+        auth_user_id,
+        email,
+        display_name,
+        avatar_url,
+        active,
+        is_platform_owner,
+        is_platform_admin,
+        is_employee,
+        last_login_at,
+        created_at,
+        updated_at
+      `)
       .eq(
         "auth_user_id",
         user.id,
@@ -198,13 +206,33 @@ export async function getCurrentPlatformUser() {
   }
 
 
-  return data;
+  if (!data) {
+
+    return null;
+
+  }
+
+
+  return {
+
+    ...data,
+
+    organization_id:
+      null,
+
+    organization_name:
+      null,
+
+    organization_role:
+      null,
+
+  };
 
 }
 
 
 /* ==========================================================
-   PLATFORM USERS 005
+   PLATFORM USERS 003
    Provision authenticated user
    ========================================================== */
 
@@ -220,7 +248,7 @@ export async function provisionPlatformUser() {
 
   if (!user) {
 
-    return;
+    return null;
 
   }
 
@@ -268,6 +296,9 @@ export async function provisionPlatformUser() {
         is_platform_admin:
           false,
 
+        is_platform_owner:
+          false,
+
       })
       .select()
       .single();
@@ -288,7 +319,7 @@ export async function provisionPlatformUser() {
 
 
 /* ==========================================================
-   PLATFORM USERS 006
+   PLATFORM USERS 004
    Assign user to organization
    ========================================================== */
 
@@ -298,10 +329,42 @@ export async function assignUserToOrganization(
   roleId: string,
 ) {
 
+  const {
+    data: targetUser,
+    error: targetError,
+  } =
+    await supabase
+      .from("platform_users")
+      .select(`
+        id,
+        is_platform_owner
+      `)
+      .eq(
+        "id",
+        platformUserId,
+      )
+      .single();
 
-  /* ========================================================
-     EXISTING MEMBERSHIP 007
-     ======================================================== */
+
+  if (targetError) {
+
+    throw new Error(
+      `Unable to load target Platform user: ${targetError.message}`,
+    );
+
+  }
+
+
+  if (
+    targetUser.is_platform_owner
+  ) {
+
+    throw new Error(
+      "The Platform Owner cannot be modified through Platform.",
+    );
+
+  }
+
 
   const {
     data: existingMembership,
@@ -325,11 +388,6 @@ export async function assignUserToOrganization(
 
   }
 
-
-  /* ========================================================
-     UPDATE MEMBERSHIP 008
-     Existing user moves or changes role
-     ======================================================== */
 
   if (existingMembership) {
 
@@ -373,11 +431,6 @@ export async function assignUserToOrganization(
   }
 
 
-  /* ========================================================
-     CREATE MEMBERSHIP 009
-     Previously unassigned platform user
-     ======================================================== */
-
   const {
     error,
   } =
@@ -415,7 +468,7 @@ export async function assignUserToOrganization(
 
 
 /* ==========================================================
-   PLATFORM USERS 010
+   PLATFORM USERS 005
    Unassign user from organization
    ========================================================== */
 
@@ -423,18 +476,42 @@ export async function unassignUserFromOrganization(
   platformUserId: string,
 ) {
 
+  const {
+    data: targetUser,
+    error: targetError,
+  } =
+    await supabase
+      .from("platform_users")
+      .select(`
+        id,
+        is_platform_owner
+      `)
+      .eq(
+        "id",
+        platformUserId,
+      )
+      .single();
 
-  /*
-   * Remove organization membership only.
-   *
-   * This intentionally DOES NOT delete:
-   *
-   * - auth.users
-   * - platform_users
-   *
-   * The user remains a valid OneTime Labs platform identity
-   * but no longer has access to an organization workspace.
-   */
+
+  if (targetError) {
+
+    throw new Error(
+      `Unable to load target Platform user: ${targetError.message}`,
+    );
+
+  }
+
+
+  if (
+    targetUser.is_platform_owner
+  ) {
+
+    throw new Error(
+      "The Platform Owner cannot be modified through Platform.",
+    );
+
+  }
+
 
   const {
     error,
@@ -452,6 +529,264 @@ export async function unassignUserFromOrganization(
 
     throw new Error(
       `Unable to unassign organization membership: ${error.message}`,
+    );
+
+  }
+
+}
+
+
+/* ==========================================================
+   PLATFORM USERS 006
+   Count platform administrators
+   ========================================================== */
+
+export async function getPlatformAdminCount():
+  Promise<number> {
+
+  const {
+    count,
+    error,
+  } =
+    await supabase
+      .from("platform_users")
+      .select(
+        "id",
+        {
+          count: "exact",
+          head: true,
+        },
+      )
+      .eq(
+        "is_platform_admin",
+        true,
+      )
+      .eq(
+        "active",
+        true,
+      );
+
+
+  if (error) {
+
+    throw new Error(
+      `Unable to count Platform Administrators: ${error.message}`,
+    );
+
+  }
+
+
+  return count ?? 0;
+
+}
+
+
+/* ==========================================================
+   PLATFORM USERS 007
+   Grant platform administrator
+   ========================================================== */
+
+export async function grantPlatformAdmin(
+  platformUserId: string,
+) {
+
+  const currentUser =
+    await getCurrentPlatformUser();
+
+
+  if (
+    !currentUser ||
+    !currentUser.is_platform_admin
+  ) {
+
+    throw new Error(
+      "Only a Platform Administrator can grant Platform Administrator access.",
+    );
+
+  }
+
+
+  const {
+    data: targetUser,
+    error: targetError,
+  } =
+    await supabase
+      .from("platform_users")
+      .select(`
+        id,
+        is_platform_owner
+      `)
+      .eq(
+        "id",
+        platformUserId,
+      )
+      .single();
+
+
+  if (targetError) {
+
+    throw new Error(
+      `Unable to load target Platform user: ${targetError.message}`,
+    );
+
+  }
+
+
+  if (
+    targetUser.is_platform_owner
+  ) {
+
+    throw new Error(
+      "The Platform Owner cannot be modified through Platform.",
+    );
+
+  }
+
+
+  const {
+    error,
+  } =
+    await supabase
+      .from("platform_users")
+      .update({
+
+        is_platform_admin:
+          true,
+
+        updated_at:
+          new Date().toISOString(),
+
+      })
+      .eq(
+        "id",
+        platformUserId,
+      );
+
+
+  if (error) {
+
+    throw new Error(
+      `Unable to grant Platform Administrator access: ${error.message}`,
+    );
+
+  }
+
+}
+
+
+/* ==========================================================
+   PLATFORM USERS 008
+   Revoke platform administrator
+   ========================================================== */
+
+export async function revokePlatformAdmin(
+  platformUserId: string,
+) {
+
+  const currentUser =
+    await getCurrentPlatformUser();
+
+
+  if (
+    !currentUser ||
+    !currentUser.is_platform_admin
+  ) {
+
+    throw new Error(
+      "Only a Platform Administrator can revoke Platform Administrator access.",
+    );
+
+  }
+
+
+  if (
+    currentUser.id ===
+    platformUserId
+  ) {
+
+    throw new Error(
+      "You cannot revoke your own Platform Administrator access.",
+    );
+
+  }
+
+
+  const {
+    data: targetUser,
+    error: targetError,
+  } =
+    await supabase
+      .from("platform_users")
+      .select(`
+        id,
+        is_platform_owner
+      `)
+      .eq(
+        "id",
+        platformUserId,
+      )
+      .single();
+
+
+  if (targetError) {
+
+    throw new Error(
+      `Unable to load target Platform user: ${targetError.message}`,
+    );
+
+  }
+
+
+  if (
+    targetUser.is_platform_owner
+  ) {
+
+    throw new Error(
+      "Platform Owner access cannot be revoked through Platform.",
+    );
+
+  }
+
+
+  const adminCount =
+    await getPlatformAdminCount();
+
+
+  if (
+    adminCount <= 1
+  ) {
+
+    throw new Error(
+      "The final Platform Administrator cannot be revoked.",
+    );
+
+  }
+
+
+  const {
+    error,
+  } =
+    await supabase
+      .from("platform_users")
+      .update({
+
+        is_platform_admin:
+          false,
+
+        updated_at:
+          new Date().toISOString(),
+
+      })
+      .eq(
+        "id",
+        platformUserId,
+      );
+
+
+  if (error) {
+
+    throw new Error(
+      `Unable to revoke Platform Administrator access: ${error.message}`,
     );
 
   }

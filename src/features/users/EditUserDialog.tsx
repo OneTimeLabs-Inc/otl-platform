@@ -3,10 +3,6 @@ import {
   useState,
 } from "react";
 
-import {
-  useAuth,
-} from "../../hooks/useAuth";
-
 import type {
   PlatformUser,
 } from "../../types/platformUser";
@@ -23,6 +19,9 @@ import {
 
 import {
   assignUserToOrganization,
+  getCurrentPlatformUser,
+  grantPlatformAdmin,
+  revokePlatformAdmin,
   unassignUserFromOrganization,
 } from "../../services/platformUsers";
 
@@ -31,7 +30,6 @@ import "./EditUserDialog.css";
 
 /* ==========================================================
    EDIT USER DIALOG 001
-   Properties
    ========================================================== */
 
 type Props = {
@@ -41,18 +39,12 @@ type Props = {
   user:
     PlatformUser | null;
 
-  onClose:
-    () => void;
+  onClose: () => void;
 
-  onSaved:
-    () => void;
+  onSaved: () => void;
 
 };
 
-
-/* ==========================================================
-   EDIT USER DIALOG 002
-   ========================================================== */
 
 export default function EditUserDialog({
 
@@ -65,40 +57,29 @@ export default function EditUserDialog({
 
 
   /* ========================================================
-     AUTHENTICATION 003
-     ======================================================== */
-
-  const {
-    user: currentAuthUser,
-  } =
-    useAuth();
-
-
-  /* ========================================================
-     OPTIONS 004
+     STATE 002
      ======================================================== */
 
   const [
     organizations,
     setOrganizations,
   ] =
-    useState<PlatformOrganization[]>(
-      [],
-    );
+    useState<PlatformOrganization[]>([]);
 
 
   const [
     roles,
     setRoles,
   ] =
-    useState<PlatformRole[]>(
-      [],
-    );
+    useState<PlatformRole[]>([]);
 
 
-  /* ========================================================
-     SELECTION 005
-     ======================================================== */
+  const [
+    currentPlatformUser,
+    setCurrentPlatformUser,
+  ] =
+    useState<PlatformUser | null>(null);
+
 
   const [
     selectedOrganization,
@@ -113,10 +94,6 @@ export default function EditUserDialog({
   ] =
     useState("");
 
-
-  /* ========================================================
-     STATE 006
-     ======================================================== */
 
   const [
     loading,
@@ -140,6 +117,13 @@ export default function EditUserDialog({
 
 
   const [
+    changingPlatformAdmin,
+    setChangingPlatformAdmin,
+  ] =
+    useState(false);
+
+
+  const [
     error,
     setError,
   ] =
@@ -147,22 +131,27 @@ export default function EditUserDialog({
 
 
   /* ========================================================
-     PERMISSIONS 007
+     PERMISSIONS 003
      ======================================================== */
 
-  const isCurrentUser =
-    currentAuthUser?.id ===
-    user?.auth_user_id;
+const isCurrentUser =
+  currentPlatformUser?.id ===
+  user?.id;
 
 
-  const isPlatformAdmin =
-    currentAuthUser?.email ===
-    "iekhanine@gmail.com";
+const isPlatformAdmin =
+  currentPlatformUser
+    ?.is_platform_admin === true;
 
 
-  const canManageUser =
-    isPlatformAdmin &&
-    !isCurrentUser;
+const isTargetPlatformOwner =
+  user?.is_platform_owner === true;
+
+
+const canManageUser =
+  isPlatformAdmin &&
+  !isCurrentUser &&
+  !isTargetPlatformOwner;
 
 
   const hasOrganization =
@@ -171,17 +160,21 @@ export default function EditUserDialog({
     );
 
 
+  const busy =
+    saving ||
+    unassigning ||
+    changingPlatformAdmin;
+
+
   /* ========================================================
-     OPTIONS 008
-     Load organizations and roles
+     LOAD 004
      ======================================================== */
 
   useEffect(() => {
 
     if (
       !open ||
-      !user ||
-      !canManageUser
+      !user
     ) {
 
       return;
@@ -201,9 +194,7 @@ export default function EditUserDialog({
       }
 
 
-      setLoading(
-        true,
-      );
+      setLoading(true);
 
       setError("");
 
@@ -211,10 +202,13 @@ export default function EditUserDialog({
       try {
 
         const [
+          currentUser,
           orgs,
           platformRoles,
         ] =
           await Promise.all([
+
+            getCurrentPlatformUser(),
 
             getPlatformOrganizations(),
 
@@ -228,6 +222,11 @@ export default function EditUserDialog({
           return;
 
         }
+
+
+        setCurrentPlatformUser(
+          currentUser,
+        );
 
 
         setOrganizations(
@@ -254,7 +253,6 @@ export default function EditUserDialog({
 
               role.code ===
                 user.organization_role,
-
           );
 
 
@@ -276,7 +274,7 @@ export default function EditUserDialog({
           setError(
             loadError instanceof Error
               ? loadError.message
-              : "Unable to load user administration options.",
+              : "Unable to load user.",
           );
 
         }
@@ -286,9 +284,7 @@ export default function EditUserDialog({
 
         if (active) {
 
-          setLoading(
-            false,
-          );
+          setLoading(false);
 
         }
 
@@ -306,31 +302,14 @@ export default function EditUserDialog({
 
     };
 
-
   }, [
     open,
     user,
-    canManageUser,
   ]);
 
 
   /* ========================================================
-     CLOSED 009
-     ======================================================== */
-
-  if (
-    !open ||
-    !user
-  ) {
-
-    return null;
-
-  }
-
-
-  /* ========================================================
-     SAVE 010
-     Assign or update organization membership
+     SAVE ORGANIZATION 005
      ======================================================== */
 
   async function handleSave() {
@@ -347,9 +326,7 @@ export default function EditUserDialog({
     }
 
 
-    setSaving(
-      true,
-    );
+    setSaving(true);
 
     setError("");
 
@@ -372,12 +349,6 @@ export default function EditUserDialog({
     }
     catch (saveError) {
 
-      console.error(
-        "Unable to save user organization access:",
-        saveError,
-      );
-
-
       setError(
         saveError instanceof Error
           ? saveError.message
@@ -387,9 +358,7 @@ export default function EditUserDialog({
     }
     finally {
 
-      setSaving(
-        false,
-      );
+      setSaving(false);
 
     }
 
@@ -397,8 +366,7 @@ export default function EditUserDialog({
 
 
   /* ========================================================
-     UNASSIGN 011
-     Remove organization membership
+     UNASSIGN 006
      ======================================================== */
 
   async function handleUnassign() {
@@ -416,7 +384,7 @@ export default function EditUserDialog({
 
     const confirmed =
       window.confirm(
-        `Unassign ${user.email} from ${user.organization_name ?? "their organization"}?\n\nThe user will remain active on the OneTime Labs platform but will lose access to the organization's OTLES workspace.`,
+        `Unassign ${user.email} from ${user.organization_name ?? "this organization"}?`,
       );
 
 
@@ -427,9 +395,7 @@ export default function EditUserDialog({
     }
 
 
-    setUnassigning(
-      true,
-    );
+    setUnassigning(true);
 
     setError("");
 
@@ -446,12 +412,6 @@ export default function EditUserDialog({
     }
     catch (unassignError) {
 
-      console.error(
-        "Unable to unassign user:",
-        unassignError,
-      );
-
-
       setError(
         unassignError instanceof Error
           ? unassignError.message
@@ -461,9 +421,7 @@ export default function EditUserDialog({
     }
     finally {
 
-      setUnassigning(
-        false,
-      );
+      setUnassigning(false);
 
     }
 
@@ -471,7 +429,99 @@ export default function EditUserDialog({
 
 
   /* ========================================================
-     RENDER 012
+     PLATFORM ADMIN 007
+     ======================================================== */
+
+  async function handlePlatformAdminChange() {
+
+    if (
+      !user ||
+      !canManageUser
+    ) {
+
+      return;
+
+    }
+
+
+    const granting =
+      !user.is_platform_admin;
+
+
+    const confirmed =
+      window.confirm(
+        granting
+          ? `Make ${user.email} a Platform Administrator?`
+          : `Revoke Platform Administrator access from ${user.email}?`,
+      );
+
+
+    if (!confirmed) {
+
+      return;
+
+    }
+
+
+    setChangingPlatformAdmin(true);
+
+    setError("");
+
+
+    try {
+
+      if (granting) {
+
+        await grantPlatformAdmin(
+          user.id,
+        );
+
+      } else {
+
+        await revokePlatformAdmin(
+          user.id,
+        );
+
+      }
+
+
+      onSaved();
+
+    }
+    catch (adminError) {
+
+      setError(
+        adminError instanceof Error
+          ? adminError.message
+          : "Unable to change Platform Administrator access.",
+      );
+
+    }
+    finally {
+
+      setChangingPlatformAdmin(false);
+
+    }
+
+  }
+
+
+  /* ========================================================
+     CLOSED 008
+     ======================================================== */
+
+  if (
+    !open ||
+    !user
+  ) {
+
+    return null;
+
+  }
+
+
+  /* ========================================================
+     RENDER 009
      ======================================================== */
 
   return (
@@ -482,24 +532,26 @@ export default function EditUserDialog({
 
 
         {/* ==================================================
-            HEADER 013
+            HEADER 010
             ================================================== */}
 
         <div className="dialog-header">
 
-          <div>
+          <div className="dialog-title">
 
-            <h2>
+<h2>
 
-              {canManageUser
-                ? "Manage User"
-                : "Account Information"}
+  {isTargetPlatformOwner
+    ? "Platform Owner"
+    : canManageUser
+      ? "Manage User"
+      : "Account Information"}
 
-            </h2>
+</h2>
 
-            <p>
+            <span>
               {user.email}
-            </p>
+            </span>
 
           </div>
 
@@ -507,13 +559,8 @@ export default function EditUserDialog({
           <button
             type="button"
             className="dialog-close"
-            onClick={
-              onClose
-            }
-            disabled={
-              saving ||
-              unassigning
-            }
+            onClick={onClose}
+            disabled={busy}
           >
             ✕
           </button>
@@ -522,224 +569,296 @@ export default function EditUserDialog({
 
 
         {/* ==================================================
-            BODY 014
+            BODY 011
             ================================================== */}
 
         <div className="dialog-body">
 
 
-          <div className="profile-avatar">
+          {/* ==================================================
+              USER SUMMARY 012
+              ================================================== */}
 
-            {user.avatar_url ? (
+          <div className="user-summary">
 
-              <img
-                src={
-                  user.avatar_url
-                }
-                alt={
-                  user.display_name ??
-                  "User"
-                }
-              />
+            <div className="user-summary-avatar">
 
-            ) : (
+              {user.avatar_url ? (
 
-              <div className="profile-avatar-placeholder">
-                ?
-              </div>
+                <img
+                  src={user.avatar_url}
+                  alt={
+                    user.display_name ??
+                    "User"
+                  }
+                />
 
-            )}
+              ) : (
 
-          </div>
+                <span>
+                  {
+                    (
+                      user.display_name ??
+                      user.email ??
+                      "?"
+                    )
+                      .charAt(0)
+                      .toUpperCase()
+                  }
+                </span>
 
+              )}
 
-          <div className="form-group">
-
-            <label>
-              Display Name
-            </label>
-
-            <input
-              value={
-                user.display_name ?? ""
-              }
-              disabled
-            />
-
-          </div>
+            </div>
 
 
-          <div className="form-group">
+            <div className="user-summary-info">
 
-            <label>
-              Email Address
-            </label>
+              <strong>
+                {user.display_name ??
+                  "Unnamed User"}
+              </strong>
 
-            <input
-              value={
-                user.email
-              }
-              disabled
-            />
+              <span>
+                {user.email}
+              </span>
 
-          </div>
-
-
-          <div className="form-group">
-
-            <label>
-              Authentication Provider
-            </label>
-
-            <input
-              value="Google"
-              disabled
-            />
+            </div>
 
           </div>
 
 
           {/* ==================================================
-              ADMINISTRATION 015
+              PLATFORM ACCESS 013
+              ================================================== */}
+
+          <section className="compact-section">
+
+            <div className="compact-section-title">
+              Platform Access
+            </div>
+
+
+<div className="permission-row">
+
+  <div className="permission-info">
+
+    <strong>
+
+      {user.is_platform_owner
+        ? "Platform Owner"
+        : "Platform Administrator"}
+
+    </strong>
+
+    <span>
+
+      {user.is_platform_owner
+        ? "Protected platform ownership account"
+        : "Full platform administration"}
+
+    </span>
+
+  </div>
+
+
+  {user.is_platform_owner ? (
+
+    <span className="compact-badge owner">
+      Owner
+    </span>
+
+  ) : user.is_platform_admin ? (
+
+    <span className="compact-badge admin">
+      Enabled
+    </span>
+
+  ) : (
+
+    <span className="compact-badge">
+      Disabled
+    </span>
+
+  )}
+
+
+  {!isTargetPlatformOwner &&
+    canManageUser && (
+
+      <button
+        type="button"
+        className={
+          user.is_platform_admin
+            ? "mini-button danger"
+            : "mini-button"
+        }
+        disabled={busy}
+        onClick={() => {
+          void handlePlatformAdminChange();
+        }}
+      >
+
+        {changingPlatformAdmin
+          ? "..."
+          : user.is_platform_admin
+            ? "Revoke"
+            : "Enable"}
+
+      </button>
+
+    )}
+
+</div>
+
+{isTargetPlatformOwner && (
+
+  <div className="owner-protection-note">
+
+    This is the protected Platform Owner account.
+    It cannot be modified through Platform.
+
+  </div>
+
+)}
+
+            {isCurrentUser &&
+              user.is_platform_admin && (
+
+                <div className="compact-note">
+                  Your own Platform Administrator
+                  access cannot be revoked here.
+                </div>
+
+              )}
+
+          </section>
+
+
+          {/* ==================================================
+              ORGANIZATION ACCESS 014
               ================================================== */}
 
           {canManageUser && (
 
-            <>
+            <section className="compact-section">
 
-              <hr />
-
-
-              <div className="admin-section">
-
-                <h3>
-                  Organization Access
-                </h3>
+              <div className="compact-section-title">
+                Organization Access
+              </div>
 
 
-                {loading ? (
+              {loading ? (
 
-                  <div>
-                    Loading permissions...
+                <div className="compact-loading">
+                  Loading...
+                </div>
+
+              ) : (
+
+                <>
+
+
+                  <div className="compact-field">
+
+                    <label>
+                      Organization
+                    </label>
+
+
+                    <select
+                      value={
+                        selectedOrganization
+                      }
+                      disabled={busy}
+                      onChange={(event) =>
+                        setSelectedOrganization(
+                          event.target.value,
+                        )
+                      }
+                    >
+
+                      <option value="">
+                        Select Organization
+                      </option>
+
+
+                      {organizations.map(
+                        (organization) => (
+
+                          <option
+                            key={
+                              organization.id
+                            }
+                            value={
+                              organization.id
+                            }
+                          >
+                            {organization.name}
+                          </option>
+
+                        ),
+                      )}
+
+                    </select>
+
                   </div>
 
-                ) : (
 
-                  <>
+                  <div className="compact-field">
 
-
-                    <div className="form-group">
-
-                      <label>
-                        Organization
-                      </label>
+                    <label>
+                      Role
+                    </label>
 
 
-                      <select
-                        value={
-                          selectedOrganization
-                        }
-                        disabled={
-                          saving ||
-                          unassigning
-                        }
-                        onChange={(event) =>
-                          setSelectedOrganization(
-                            event.target.value,
-                          )
-                        }
-                      >
+                    <select
+                      value={
+                        selectedRole
+                      }
+                      disabled={busy}
+                      onChange={(event) =>
+                        setSelectedRole(
+                          event.target.value,
+                        )
+                      }
+                    >
 
-                        <option value="">
-                          Select Organization
-                        </option>
+                      <option value="">
+                        Select Role
+                      </option>
 
 
-                        {organizations.map(
-                          (organization) => (
+                      {roles.map(
+                        (role) => (
 
-                            <option
-                              key={
-                                organization.id
-                              }
-                              value={
-                                organization.id
-                              }
-                            >
-                              {
-                                organization.name
-                              }
-                            </option>
+                          <option
+                            key={
+                              role.id
+                            }
+                            value={
+                              role.id
+                            }
+                          >
+                            {role.display_name}
+                          </option>
 
-                          ),
-                        )}
+                        ),
+                      )}
 
-                      </select>
+                    </select>
 
-                    </div>
+                  </div>
 
 
-                    <div className="form-group">
+                  {hasOrganization && (
 
-                      <label>
-                        Organization Role
-                      </label>
+                    <div className="assignment-row">
 
-
-                      <select
-                        value={
-                          selectedRole
-                        }
-                        disabled={
-                          saving ||
-                          unassigning
-                        }
-                        onChange={(event) =>
-                          setSelectedRole(
-                            event.target.value,
-                          )
-                        }
-                      >
-
-                        <option value="">
-                          Select Role
-                        </option>
-
-
-                        {roles.map(
-                          (role) => (
-
-                            <option
-                              key={
-                                role.id
-                              }
-                              value={
-                                role.id
-                              }
-                            >
-                              {
-                                role.display_name
-                              }
-                            </option>
-
-                          ),
-                        )}
-
-                      </select>
-
-                    </div>
-
-
-                    {/* ========================================
-                        CURRENT ASSIGNMENT 016
-                        ======================================== */}
-
-                    {hasOrganization && (
-
-                      <div className="current-organization">
+                      <div>
 
                         <span>
-                          Current Assignment
+                          Current
                         </span>
 
                         <strong>
@@ -748,61 +867,50 @@ export default function EditUserDialog({
 
                         <small>
                           {user.organization_role ??
-                            "No role assigned"}
+                            "No role"}
                         </small>
 
                       </div>
 
-                    )}
-
-
-                    {/* ========================================
-                        ERROR 017
-                        ======================================== */}
-
-                    {error && (
-
-                      <div className="user-admin-error">
-                        {error}
-                      </div>
-
-                    )}
-
-
-                    {/* ========================================
-                        UNASSIGN 018
-                        ======================================== */}
-
-                    {hasOrganization && (
 
                       <button
                         type="button"
-                        className="danger-button"
-                        disabled={
-                          saving ||
-                          unassigning
-                        }
+                        className="mini-button danger"
+                        disabled={busy}
                         onClick={() => {
                           void handleUnassign();
                         }}
                       >
 
                         {unassigning
-                          ? "Unassigning..."
-                          : "Unassign User"}
+                          ? "..."
+                          : "Unassign"}
 
                       </button>
 
-                    )}
+                    </div>
+
+                  )}
 
 
-                  </>
+                </>
 
-                )}
+              )}
 
-              </div>
+            </section>
 
-            </>
+          )}
+
+
+          {/* ==================================================
+              ERROR 015
+              ================================================== */}
+
+          {error && (
+
+            <div className="compact-error">
+              {error}
+            </div>
 
           )}
 
@@ -811,50 +919,45 @@ export default function EditUserDialog({
 
 
         {/* ==================================================
-            FOOTER 019
+            FOOTER 016
             ================================================== */}
 
         <div className="dialog-footer">
 
-
           <button
             type="button"
             className="secondary-button"
-            onClick={
-              onClose
-            }
-            disabled={
-              saving ||
-              unassigning
-            }
+            onClick={onClose}
+            disabled={busy}
           >
             Cancel
           </button>
 
 
-          <button
-            type="button"
-            className="primary-button"
-            onClick={() => {
-              void handleSave();
-            }}
-            disabled={
-              saving ||
-              unassigning ||
-              !canManageUser ||
-              !selectedOrganization ||
-              !selectedRole
-            }
-          >
+          {canManageUser && (
 
-            {saving
-              ? "Saving..."
-              : hasOrganization
-                ? "Save Changes"
-                : "Assign User"}
+            <button
+              type="button"
+              className="primary-button"
+              disabled={
+                busy ||
+                !selectedOrganization ||
+                !selectedRole
+              }
+              onClick={() => {
+                void handleSave();
+              }}
+            >
 
-          </button>
+              {saving
+                ? "Saving..."
+                : hasOrganization
+                  ? "Save"
+                  : "Assign"}
 
+            </button>
+
+          )}
 
         </div>
 

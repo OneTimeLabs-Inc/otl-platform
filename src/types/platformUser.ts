@@ -1,8 +1,10 @@
 /* ==========================================================
-   PLATFORM USER
+   PLATFORM USER 001
+   Platform user model
    ========================================================== */
 
-export type PlatformUser = {
+export interface PlatformUser {
+
   id: string;
 
   auth_user_id: string;
@@ -15,6 +17,8 @@ export type PlatformUser = {
 
   active: boolean;
 
+  is_platform_owner: boolean;
+
   is_platform_admin: boolean;
 
   is_employee: boolean;
@@ -25,13 +29,10 @@ export type PlatformUser = {
 
   updated_at: string;
 
-  /* ======================================================
-     Organization
-     ====================================================== */
-
   organization_id: string | null;
 
   organization_name: string | null;
 
   organization_role: string | null;
-};
+
+}
