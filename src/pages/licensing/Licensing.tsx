@@ -67,6 +67,16 @@ export default function Licensing() {
     [data.licenses, selectedEntitlement],
   );
 
+  const productVersionById = useMemo(
+    () => new Map(data.products.map(product => [product.id, product.currentVersion])),
+    [data.products],
+  );
+
+  function productLabel(productName: string, productId: string): string {
+    const version = productVersionById.get(productId);
+    return version ? `${productName} ${version}` : productName;
+  }
+
   async function run(task: () => Promise<void>) {
     setWorking(true);
     setError("");
@@ -170,7 +180,7 @@ export default function Licensing() {
           <label>Licensed software</label>
           <select value={selectedEntitlement} onChange={event => setSelectedEntitlement(event.target.value)}>
             {data.licenses.filter(item => item.status === "active" && item.downloadEnabled).map(item => (
-              <option key={item.entitlementId} value={item.entitlementId}>{item.productName} — {item.userEmail}</option>
+              <option key={item.entitlementId} value={item.entitlementId}>{productLabel(item.productName, item.productId)} — {item.userEmail}</option>
             ))}
           </select>
           <div className="licensing-two-col">
@@ -217,7 +227,7 @@ export default function Licensing() {
               {data.licenses.map(item => (
                 <tr key={item.entitlementId}>
                   <td><strong>{item.userDisplayName || item.userEmail}</strong><small>{item.userEmail}</small></td>
-                  <td>{item.productName}</td>
+                  <td>{productLabel(item.productName, item.productId)}</td>
                   <td className="license-key">{item.licenseKey}</td>
                   <td><span className={`license-status ${item.status}`}>{item.status}</span></td>
                   <td>
@@ -249,7 +259,7 @@ export default function Licensing() {
                 const exhausted = link.maxUses !== null && link.useCount >= link.maxUses;
                 const status = link.revokedAt ? "Revoked" : expired ? "Expired" : exhausted ? "Exhausted" : "Active";
                 return <tr key={link.id}>
-                  <td>{link.productName}</td>
+                  <td>{productLabel(link.productName, link.productId)}</td>
                   <td>{link.recipientEmail || "—"}</td>
                   <td>{link.useCount} / {link.maxUses ?? "∞"}</td>
                   <td>{prettyDate(link.expiresAt)}</td>
