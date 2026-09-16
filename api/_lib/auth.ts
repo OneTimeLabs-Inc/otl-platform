@@ -1,5 +1,8 @@
 import type { User } from "@supabase/supabase-js";
-import { getSupabaseAdmin } from "./supabaseAdmin.js";
+import {
+  getSupabaseAdmin,
+  getSupabaseAuthClient,
+} from "./supabaseAdmin.js";
 
 /* ==========================================================
    PLATFORM API 002
@@ -20,7 +23,16 @@ export async function requireUser(
   }
 
   const { data, error } =
-    await getSupabaseAdmin().auth.getUser(match[1]);
+    await getSupabaseAuthClient().auth.getUser(match[1]);
+
+  if (error) {
+    console.error("PLATFORM AUTH VALIDATION ERROR:", {
+      message: error.message,
+      status: error.status,
+      code: error.code,
+      name: error.name,
+    });
+  }
 
   if (error || !data.user) {
     throw new Error("AUTH_REQUIRED");
