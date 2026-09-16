@@ -5,6 +5,7 @@ import {
   FileText,
   Boxes,
   Megaphone,
+  KeyRound,
   Shield,
   ClipboardList,
   Settings,
@@ -101,6 +102,14 @@ export default function Sidebar({
         >
           <Boxes size={18} />
           <span>Applications</span>
+        </button>
+
+        <button
+          className={`sidebar-item ${currentPage === "licensing" ? "active" : ""}`}
+          onClick={() => onNavigate("licensing")}
+        >
+          <KeyRound size={18} />
+          <span>Software Licensing</span>
         </button>
 
         {isPlatformAdmin && (

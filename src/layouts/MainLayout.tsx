@@ -17,6 +17,7 @@ import Documents from "../pages/documents/Documents";
 import AppMessages from "../pages/appMessages/AppMessages";
 
 import Applications from "../pages/applications/Applications";
+import Licensing from "../pages/licensing/Licensing";
 
 import type {
   Organization,
@@ -145,6 +146,15 @@ const [
         return (
 
           <Applications />
+
+        );
+
+
+      case "licensing":
+
+        return (
+
+          <Licensing />
 
         );
 

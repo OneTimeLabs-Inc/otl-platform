@@ -1,0 +1,22 @@
+OneTime Labs Platform - Software Licensing / Download Entitlements
+
+1. Run SQL once in the shared OneTime Labs Supabase database:
+   sql/004_software_entitlements_and_download_links.sql
+
+2. Add this environment variable to Platform/Vercel if it is not already present:
+   STORE_PUBLIC_URL=https://store.onetimelabs.net
+
+3. Deploy Platform.
+   A new sidebar item appears: Software Licensing
+
+Platform now supports:
+- Assigning a perpetual product license to an existing Platform user.
+- Activating, suspending, or revoking a license.
+- Automatically disabling download entitlement when a license is suspended/revoked.
+- Re-enabling download entitlement when a license is reactivated.
+- Generating expiring one-use or multi-use Store download links.
+- Revoking temporary download links.
+- Viewing recent temporary link usage/status.
+
+IMPORTANT REMOTE REVOCATION NOTE:
+The database status becomes the source of truth immediately. For an installed app such as StreamSafe to stop operating after a chargeback, the app must periodically validate its license status. The accompanying Store patch adds POST /api/license/status for that purpose. StreamSafe should lock only when the service explicitly returns suspended/revoked/expired; a network failure should use a defined offline grace policy instead of immediately treating the license as revoked.
