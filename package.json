@@ -3,12 +3,13 @@
   "private": true,
   "version": "0.1.5",
   "type": "module",
-  "scripts": {
-    "dev:full": "vercel dev",
-    "build": "tsc -b && vite build",
-    "lint": "oxlint",
-    "preview": "vite preview"
-  },
+"scripts": {
+  "dev": "vite",
+  "dev:full": "vercel dev --listen 5173",
+  "build": "tsc -b && vite build",
+  "lint": "oxlint",
+  "preview": "vite preview"
+},
   "dependencies": {
     "@supabase/supabase-js": "^2.112.1",
     "lucide-react": "^1.28.0",
