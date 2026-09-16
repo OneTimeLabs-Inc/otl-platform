@@ -15,12 +15,14 @@ type Props = {
   onOpenOrganizations: () => void;
   onOpenUsers: () => void;
   onOpenAppMessages: () => void;
+  onOpenMarketplace: () => void;
 };
 
 export default function Dashboard({
   onOpenOrganizations,
   onOpenUsers,
   onOpenAppMessages,
+  onOpenMarketplace,
 }: Props) {
   const { user } = useAuth();
 
@@ -193,6 +195,25 @@ export default function Dashboard({
     Manage organizations and access.
   </div>
 </button>
+
+            <button
+              className="dashboard-tile"
+              onClick={onOpenMarketplace}
+            >
+
+              <div className="tile-icon">
+                🛒
+              </div>
+
+              <div className="tile-title">
+                Marketplace
+              </div>
+
+              <div className="tile-description">
+                Manage Store sellers and listings.
+              </div>
+
+            </button>
 
             <button
               className="dashboard-tile"

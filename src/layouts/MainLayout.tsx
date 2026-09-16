@@ -17,6 +17,7 @@ import Documents from "../pages/documents/Documents";
 import AppMessages from "../pages/appMessages/AppMessages";
 
 import Applications from "../pages/applications/Applications";
+import Marketplace from "../pages/marketplace/Marketplace";
 import Licensing from "../pages/licensing/Licensing";
 
 import type {
@@ -80,6 +81,12 @@ const [
   onOpenAppMessages={() =>
     setPage(
       "appMessages",
+    )
+  }
+
+  onOpenMarketplace={() =>
+    setPage(
+      "marketplace",
     )
   }
 />
@@ -150,6 +157,15 @@ const [
         );
 
 
+      case "marketplace":
+
+        return (
+
+          <Marketplace />
+
+        );
+
+
       case "licensing":
 
         return (
@@ -198,6 +214,12 @@ const [
   onOpenAppMessages={() =>
     setPage(
       "appMessages",
+    )
+  }
+
+  onOpenMarketplace={() =>
+    setPage(
+      "marketplace",
     )
   }
 />

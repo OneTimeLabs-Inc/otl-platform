@@ -6,6 +6,7 @@ import {
   Boxes,
   Megaphone,
   KeyRound,
+  Store,
   Shield,
   ClipboardList,
   Settings,
@@ -111,6 +112,27 @@ export default function Sidebar({
           <KeyRound size={18} />
           <span>Software Licensing</span>
         </button>
+
+
+        {isPlatformAdmin && (
+
+          <button
+            className={`sidebar-item ${
+              currentPage === "marketplace"
+                ? "active"
+                : ""
+            }`}
+            onClick={() =>
+              onNavigate(
+                "marketplace",
+              )
+            }
+          >
+            <Store size={18} />
+            <span>Marketplace</span>
+          </button>
+
+        )}
 
         {isPlatformAdmin && (
 

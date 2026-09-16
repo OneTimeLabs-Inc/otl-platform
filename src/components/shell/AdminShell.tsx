@@ -12,6 +12,7 @@ export type Page =
   | "organizations"
   | "documents"
   | "applications"
+  | "marketplace"
   | "licensing"
   | "appMessages"
   | "roles"
