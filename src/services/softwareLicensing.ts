@@ -104,3 +104,10 @@ export async function revokeTemporaryDownloadLink(linkId: string) {
     linkId,
   });
 }
+
+export async function deleteSoftwareLicense(entitlementId: string) {
+  return await postAction<{ deleted: true }>({
+    action: "delete-license",
+    entitlementId,
+  });
+}

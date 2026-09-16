@@ -333,6 +333,32 @@ export default async function handler(req: any, res: any) {
       return;
     }
 
+    if (action === "delete-license") {
+      const entitlementId = text(req.body?.entitlementId);
+
+      if (!entitlementId) {
+        res.status(400).json({ error: "Entitlement ID is required." });
+        return;
+      }
+
+      const { data, error } = await supabase.rpc("admin_delete_software_license", {
+        p_entitlement_id: entitlementId,
+        p_actor_user_id: actor.id,
+      });
+
+      if (error) {
+        const message = error.message || "Unable to delete software license.";
+        if (message.includes("Purchased licenses cannot be deleted")) {
+          res.status(409).json({ error: message });
+          return;
+        }
+        throw new Error(`Unable to delete software license: ${message}`);
+      }
+
+      res.status(200).json({ deleted: Boolean((data as Record<string, unknown>)?.deleted ?? true) });
+      return;
+    }
+
     if (action === "revoke-link") {
       const linkId = text(req.body?.linkId);
       if (!linkId) {
