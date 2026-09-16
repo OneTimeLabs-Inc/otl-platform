@@ -237,9 +237,9 @@ export default function Licensing() {
   async function removeLicense(item: SoftwareLicense) {
     const versionedProduct = productLabel(item.productName, item.productId);
     const confirmed = window.confirm(
-      `Permanently delete ${versionedProduct} from ${item.userEmail}?\n\n` +
-      "This removes the entitlement, license, activations, and temporary download links. " +
-      "Purchased licenses cannot be deleted and must be revoked instead.",
+      `Permanently delete revoked ${versionedProduct} from ${item.userEmail}?\n\n` +
+      "This removes the revoked license, entitlement, activations, and temporary download links. " +
+      "Any Store order history is retained. A new license can be issued later if needed.",
     );
 
     if (!confirmed) return;
@@ -271,6 +271,7 @@ export default function Licensing() {
       setWorking(false);
     }
   }
+
 
   return (
     <div className="licensing-page page">
@@ -501,9 +502,11 @@ export default function Licensing() {
                         <ShieldOff size={13} /> Revoke
                       </button>
                     )}
-                    <button className="danger" onClick={() => void removeLicense(item)} disabled={working}>
-                      <Trash2 size={13} /> Delete
-                    </button>
+                    {item.status === "revoked" && (
+                      <button className="danger" onClick={() => void removeLicense(item)} disabled={working}>
+                        <Trash2 size={13} /> Delete
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))}

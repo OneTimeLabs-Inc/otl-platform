@@ -348,7 +348,7 @@ export default async function handler(req: any, res: any) {
 
       if (error) {
         const message = error.message || "Unable to delete software license.";
-        if (message.includes("Purchased licenses cannot be deleted")) {
+        if (message.includes("Only revoked licenses can be permanently deleted")) {
           res.status(409).json({ error: message });
           return;
         }
