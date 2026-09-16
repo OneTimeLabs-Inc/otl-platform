@@ -463,7 +463,7 @@ export default function AppMessages() {
               id="app-message-text"
               value={message}
               maxLength={600}
-              rows={7}
+              rows={2}
               disabled={
                 loading ||
                 saving
@@ -609,8 +609,7 @@ export default function AppMessages() {
             </strong>
 
             <span>
-              One saved broadcast applies to every installation
-              of the selected application.
+              Broadcast applies to every installation of the selected application.
             </span>
 
           </div>
