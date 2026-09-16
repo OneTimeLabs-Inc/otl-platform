@@ -14,11 +14,13 @@ import "./Dashboard.css";
 type Props = {
   onOpenOrganizations: () => void;
   onOpenUsers: () => void;
+  onOpenAppMessages: () => void;
 };
 
 export default function Dashboard({
   onOpenOrganizations,
   onOpenUsers,
+  onOpenAppMessages,
 }: Props) {
   const { user } = useAuth();
 
@@ -207,6 +209,25 @@ export default function Dashboard({
 
               <div className="tile-description">
                 Coming Soon
+              </div>
+
+            </button>
+
+            <button
+              className="dashboard-tile"
+              onClick={onOpenAppMessages}
+            >
+
+              <div className="tile-icon">
+                📣
+              </div>
+
+              <div className="tile-title">
+                App Broadcasts
+              </div>
+
+              <div className="tile-description">
+                Send a global notice to installed OneTime Labs applications.
               </div>
 
             </button>

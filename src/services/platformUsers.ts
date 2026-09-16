@@ -792,3 +792,197 @@ export async function revokePlatformAdmin(
   }
 
 }
+
+/* ==========================================================
+   PLATFORM USERS 009
+   Authenticated administration API
+   ========================================================== */
+
+async function adminAuthHeaders(): Promise<Record<string, string>> {
+
+  const {
+    data: {
+      session,
+    },
+  } =
+    await supabase.auth.getSession();
+
+
+  const token =
+    session?.access_token;
+
+
+  if (!token) {
+
+    throw new Error(
+      "Sign in to continue.",
+    );
+
+  }
+
+
+  return {
+
+    Authorization:
+      `Bearer ${token}`,
+
+    "Content-Type":
+      "application/json",
+
+  };
+
+}
+
+
+async function readAdminError(
+  response: Response,
+): Promise<string> {
+
+  try {
+
+    const body =
+      await response.json() as {
+        error?: string;
+      };
+
+
+    return body.error ??
+      `Request failed with status ${response.status}.`;
+
+  }
+  catch {
+
+    return `Request failed with status ${response.status}.`;
+
+  }
+
+}
+
+
+/* ==========================================================
+   PLATFORM USERS 010
+   Update user details
+   ========================================================== */
+
+export async function updatePlatformUserDetails(
+  platformUserId: string,
+  displayName: string,
+) {
+
+  const response =
+    await fetch(
+      "/api/admin/users",
+      {
+        method:
+          "PATCH",
+
+        headers:
+          await adminAuthHeaders(),
+
+        body:
+          JSON.stringify({
+            id:
+              platformUserId,
+            displayName,
+            action:
+              "profile",
+          }),
+      },
+    );
+
+
+  if (!response.ok) {
+
+    throw new Error(
+      await readAdminError(
+        response,
+      ),
+    );
+
+  }
+
+}
+
+
+/* ==========================================================
+   PLATFORM USERS 011
+   Archive user
+   ========================================================== */
+
+export async function archivePlatformUser(
+  platformUserId: string,
+) {
+
+  const response =
+    await fetch(
+      "/api/admin/users",
+      {
+        method:
+          "DELETE",
+
+        headers:
+          await adminAuthHeaders(),
+
+        body:
+          JSON.stringify({
+            id:
+              platformUserId,
+          }),
+      },
+    );
+
+
+  if (!response.ok) {
+
+    throw new Error(
+      await readAdminError(
+        response,
+      ),
+    );
+
+  }
+
+}
+
+
+/* ==========================================================
+   PLATFORM USERS 012
+   Restore archived user
+   ========================================================== */
+
+export async function restorePlatformUser(
+  platformUserId: string,
+) {
+
+  const response =
+    await fetch(
+      "/api/admin/users",
+      {
+        method:
+          "PATCH",
+
+        headers:
+          await adminAuthHeaders(),
+
+        body:
+          JSON.stringify({
+            id:
+              platformUserId,
+            action:
+              "restore",
+          }),
+      },
+    );
+
+
+  if (!response.ok) {
+
+    throw new Error(
+      await readAdminError(
+        response,
+      ),
+    );
+
+  }
+
+}

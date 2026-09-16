@@ -1,0 +1,336 @@
+/* ==========================================================
+   SELLER APPLY 001
+   Public seller application surface
+   ========================================================== */
+
+.seller-apply-page {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    background: #eef2f7;
+    color: #1f2937;
+}
+
+.seller-apply-shell {
+    width: min(1040px, calc(100% - 40px));
+    margin: 0 auto;
+    padding: 46px 0 70px;
+}
+
+.seller-apply-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 22px;
+}
+
+.seller-apply-header > div:first-child {
+    max-width: 650px;
+}
+
+.seller-apply-kicker {
+    display: block;
+    margin-bottom: 8px;
+    color: #2563eb;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .12em;
+}
+
+.seller-apply-header h1 {
+    margin: 0;
+    font-size: 32px;
+    line-height: 1.1;
+}
+
+.seller-apply-header p {
+    margin-top: 10px;
+    color: #667085;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.seller-apply-card {
+    width: 100%;
+    padding: 26px;
+    border: 1px solid #d8dde6;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 8px 28px rgba(15, 23, 42, .06);
+}
+
+.seller-auth-card {
+    max-width: 560px;
+}
+
+.seller-apply-card-icon,
+.seller-status-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    margin-bottom: 16px;
+    border-radius: 9px;
+    background: #e8f0ff;
+    color: #2563eb;
+}
+
+.seller-status-icon.approved {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.seller-status-icon.rejected {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.seller-apply-card h2 {
+    margin: 0;
+    font-size: 20px;
+}
+
+.seller-apply-card > p {
+    max-width: 680px;
+    margin-top: 8px;
+    color: #667085;
+    font-size: 13px;
+    line-height: 1.55;
+}
+
+.seller-auth-switch {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+    margin: 22px 0 16px;
+    padding: 4px;
+    border-radius: 8px;
+    background: #f1f4f8;
+}
+
+.seller-auth-switch button {
+    min-height: 34px;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: #667085;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.seller-auth-switch button.active {
+    background: #fff;
+    color: #111827;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, .10);
+}
+
+.seller-apply-form {
+    display: grid;
+    gap: 14px;
+    margin-top: 20px;
+    max-width: 620px;
+}
+
+.seller-apply-form label {
+    display: grid;
+    gap: 6px;
+    color: #344054;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.seller-apply-form input,
+.seller-apply-form textarea {
+    width: 100%;
+    border: 1px solid #cfd6e1;
+    border-radius: 7px;
+    background: #fff;
+    padding: 10px 11px;
+    outline: none;
+    font-size: 13px;
+    font-weight: 400;
+}
+
+.seller-apply-form input:focus,
+.seller-apply-form textarea:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, .10);
+}
+
+.seller-apply-form small {
+    color: #7b8494;
+    font-size: 10px;
+    font-weight: 400;
+}
+
+.seller-apply-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 38px;
+    width: fit-content;
+    padding: 0 18px;
+    border: 0;
+    border-radius: 7px;
+    background: #2563eb;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.seller-apply-primary:disabled {
+    opacity: .6;
+    cursor: wait;
+}
+
+.seller-apply-anchor {
+    margin-top: 20px;
+}
+
+.seller-apply-link-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    border: 0;
+    background: transparent;
+    color: #667085;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.seller-apply-error,
+.seller-apply-message {
+    padding: 10px 12px;
+    border-radius: 7px;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.seller-apply-error {
+    border: 1px solid #fecaca;
+    background: #fff1f2;
+    color: #b42318;
+}
+
+.seller-apply-message {
+    border: 1px solid #bfdbfe;
+    background: #eff6ff;
+    color: #1d4ed8;
+}
+
+.seller-apply-account-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 22px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #e8ebf0;
+}
+
+.seller-apply-account-row > div {
+    display: grid;
+    gap: 2px;
+}
+
+.seller-apply-account-row span,
+.seller-application-summary span {
+    color: #7b8494;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+}
+
+.seller-apply-account-row strong,
+.seller-application-summary strong {
+    font-size: 13px;
+}
+
+.seller-apply-badge,
+.seller-application-status {
+    display: inline-flex;
+    align-items: center;
+    min-height: 24px;
+    width: fit-content;
+    padding: 0 9px;
+    border-radius: 999px;
+    background: #e8f0ff;
+    color: #1d4ed8;
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+}
+
+.seller-application-status.pending {
+    background: #fff7ed;
+    color: #c2410c;
+}
+
+.seller-application-status.approved {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.seller-application-status.rejected {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.seller-status-card {
+    max-width: 760px;
+}
+
+.seller-application-summary {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.seller-application-summary > div {
+    display: grid;
+    gap: 4px;
+    padding: 12px;
+    border: 1px solid #e1e6ee;
+    border-radius: 7px;
+    background: #f8fafc;
+}
+
+.seller-apply-loading {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    margin-top: 50px;
+    color: #667085;
+}
+
+.seller-spin {
+    animation: seller-spin .9s linear infinite;
+}
+
+@keyframes seller-spin {
+    to { transform: rotate(360deg); }
+}
+
+@media (max-width: 700px) {
+    .seller-apply-shell {
+        width: min(100% - 24px, 1040px);
+        padding-top: 24px;
+    }
+
+    .seller-apply-header,
+    .seller-apply-account-row {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .seller-application-summary {
+        grid-template-columns: 1fr;
+    }
+}

@@ -12,20 +12,30 @@ export default function ProtectedRoute({
   const {
     user,
     isLoading,
+    accessDenied,
   } = useAuth();
 
-if (isLoading) {
+  if (isLoading) {
     return (
-        <LoadingScreen
-            message="Loading your workspace..."
-        />
+      <LoadingScreen
+        message="Loading your workspace..."
+      />
     );
-}
+  }
 
   if (!user) {
     return (
       <Navigate
         to="/login"
+        replace
+      />
+    );
+  }
+
+  if (accessDenied) {
+    return (
+      <Navigate
+        to="/login?denied=1"
         replace
       />
     );

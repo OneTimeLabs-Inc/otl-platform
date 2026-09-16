@@ -14,6 +14,10 @@ import Organizations from "../features/organizations/Organizations";
 
 import Documents from "../pages/documents/Documents";
 
+import AppMessages from "../pages/appMessages/AppMessages";
+
+import Applications from "../pages/applications/Applications";
+
 import type {
   Organization,
 } from "../types/organizations";
@@ -69,6 +73,12 @@ const [
   onOpenUsers={() =>
     setPage(
       "users",
+    )
+  }
+
+  onOpenAppMessages={() =>
+    setPage(
+      "appMessages",
     )
   }
 />
@@ -130,6 +140,24 @@ const [
 
 
 
+      case "applications":
+
+        return (
+
+          <Applications />
+
+        );
+
+
+      case "appMessages":
+
+        return (
+
+          <AppMessages />
+
+        );
+
+
       case "documents":
 
         return (
@@ -154,6 +182,12 @@ const [
   onOpenUsers={() =>
     setPage(
       "users",
+    )
+  }
+
+  onOpenAppMessages={() =>
+    setPage(
+      "appMessages",
     )
   }
 />

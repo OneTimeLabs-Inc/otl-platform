@@ -123,8 +123,9 @@ const platformAdmins =
     () =>
       users.filter(
         (user) =>
-          user.is_platform_admin ||
-          user.is_platform_owner,
+          user.active &&
+          (user.is_platform_admin ||
+          user.is_platform_owner),
       ),
     [
       users,
@@ -137,6 +138,7 @@ const platformAdmins =
       () =>
         users.filter(
           (user) =>
+            user.active &&
             !user.is_platform_admin &&
             !user.organization_id,
         ),
@@ -151,10 +153,24 @@ const platformAdmins =
       () =>
         users.filter(
           (user) =>
+            user.active &&
             !user.is_platform_admin &&
             Boolean(
               user.organization_id,
             ),
+        ),
+      [
+        users,
+      ],
+    );
+
+
+  const archivedUsers =
+    useMemo(
+      () =>
+        users.filter(
+          (user) =>
+            !user.active,
         ),
       [
         users,
@@ -845,6 +861,71 @@ const platformAdmins =
 
                   )}
 
+
+                </div>
+
+              </section>
+
+
+              {/* ============================================
+                  ARCHIVED USERS 017
+                  ============================================ */}
+
+              <section className="user-section archived-users-section">
+
+                <div className="user-section-header">
+
+                  <div>
+
+                    <h2>
+                      Archived Users
+                    </h2>
+
+                    <p>
+                      Deactivated Platform accounts retained
+                      for audit and recovery.
+                    </p>
+
+                  </div>
+
+                  <span className="section-count">
+                    {archivedUsers.length}
+                  </span>
+
+                </div>
+
+                <div className="users-table">
+
+                  <div className="users-table-header">
+
+                    <div>Name</div>
+                    <div>Email</div>
+                    <div>Organization</div>
+                    <div>Access</div>
+                    <div>Status</div>
+
+                  </div>
+
+                  {archivedUsers.length === 0 ? (
+
+                    <div className="users-empty">
+                      No archived users.
+                    </div>
+
+                  ) : (
+
+                    archivedUsers.map(
+                      (user) =>
+                        renderUserRow(
+                          user,
+                          {
+                            showOrganization:
+                              true,
+                          },
+                        ),
+                    )
+
+                  )}
 
                 </div>
 

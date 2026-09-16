@@ -213,7 +213,7 @@ await createOrganization(
 
   const confirmed =
     window.confirm(
-      `Delete ${organization.name}? This cannot be undone.`,
+      `Remove ${organization.name} from Platform? Its Store seller will be suspended and all public listings will be archived. Historical records are retained for audit.`,
     );
 
 
@@ -361,7 +361,12 @@ await createOrganization(
 
 
 
-
+          {organization && (
+            <div className="organization-sync-note">
+              Organization name and slug are controlled here in Platform.
+              Changes also update the linked Store seller identity.
+            </div>
+          )}
 
 <div className="checkbox-group">
 

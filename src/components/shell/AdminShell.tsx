@@ -12,6 +12,7 @@ export type Page =
   | "organizations"
   | "documents"
   | "applications"
+  | "appMessages"
   | "roles"
   | "audit"
   | "settings";

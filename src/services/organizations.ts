@@ -10,6 +10,29 @@ export type Organization = {
   updated_at: string;
 };
 
+async function platformAdminHeaders(): Promise<Record<string, string>> {
+  const { data: { session } } = await supabase.auth.getSession();
+  const token = session?.access_token;
+
+  if (!token) {
+    throw new Error("Sign in to Platform.");
+  }
+
+  return {
+    Authorization: `Bearer ${token}`,
+    "Content-Type": "application/json",
+  };
+}
+
+async function readPlatformApiError(response: Response): Promise<string> {
+  try {
+    const body = await response.json() as { error?: string };
+    return body.error || `Request failed with status ${response.status}.`;
+  } catch {
+    return `Request failed with status ${response.status}.`;
+  }
+}
+
 export async function getMyOrganization() {
   console.log("Step 1");
 
@@ -115,6 +138,7 @@ export async function getOrganizations(): Promise<
       created_at,
       updated_at
     `)
+    .eq("active", true)
     .order("name", {
       ascending: true,
     });
@@ -255,36 +279,26 @@ export async function updateOrganization(
   id: string,
   updates: Partial<Organization>,
 ): Promise<Organization> {
+  const response = await fetch(
+    "/api/admin/organizations",
+    {
+      method: "PATCH",
+      headers: await platformAdminHeaders(),
+      body: JSON.stringify({
+        id,
+        name: updates.name,
+        slug: updates.slug,
+        active: updates.active,
+      }),
+    },
+  );
 
-  const {
-    data,
-    error,
-  } = await supabase
-    .from("organizations")
-    .update(updates)
-    .eq(
-      "id",
-      id,
-    )
-    .select()
-    .maybeSingle();
-
-
-  if (error) {
-    throw new Error(
-      `Unable to update organization: ${error.message}`,
-    );
+  if (!response.ok) {
+    throw new Error(await readPlatformApiError(response));
   }
 
-
-  if (!data) {
-    throw new Error(
-      "Organization was not updated. You may not have permission."
-    );
-  }
-
-
-  return data;
+  const body = await response.json() as { organization: Organization };
+  return body.organization;
 }
 
 /* ==========================================================
@@ -295,67 +309,16 @@ export async function updateOrganization(
 export async function deleteOrganization(
   id: string,
 ): Promise<void> {
+  const response = await fetch(
+    "/api/admin/organizations",
+    {
+      method: "DELETE",
+      headers: await platformAdminHeaders(),
+      body: JSON.stringify({ id }),
+    },
+  );
 
-
-  // Remove OTLES workspace
-
-  const {
-    error: workspaceError,
-  } = await supabase
-    .from("otles_workspaces")
-    .delete()
-    .eq(
-      "organization_id",
-      id,
-    );
-
-
-  if (workspaceError) {
-    throw new Error(
-      `Unable to delete workspace: ${workspaceError.message}`,
-    );
+  if (!response.ok) {
+    throw new Error(await readPlatformApiError(response));
   }
-
-
-
-  // Remove memberships
-
-  const {
-    error: memberError,
-  } = await supabase
-    .from("organization_members")
-    .delete()
-    .eq(
-      "organization_id",
-      id,
-    );
-
-
-  if (memberError) {
-    throw new Error(
-      `Unable to delete organization members: ${memberError.message}`,
-    );
-  }
-
-
-
-  // Remove organization
-
-  const {
-    error,
-  } = await supabase
-    .from("organizations")
-    .delete()
-    .eq(
-      "id",
-      id,
-    );
-
-
-  if (error) {
-    throw new Error(
-      `Unable to delete organization: ${error.message}`,
-    );
-  }
-
 }

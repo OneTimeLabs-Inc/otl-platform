@@ -93,7 +93,10 @@ export function AuthProvider({
     if (
       !platformUser ||
       !platformUser.active ||
-      !platformUser.is_platform_admin
+      !(
+        platformUser.is_platform_admin ||
+        platformUser.is_platform_owner
+      )
     ) {
       setSession(null);
       setUser(null);

@@ -404,3 +404,17 @@
   }
 
 }
+/* ==========================================================
+   ORGANIZATION SYNC NOTE 012
+   ========================================================== */
+
+.edit-organization-dialog .organization-sync-note {
+  margin: 2px 0 12px;
+  padding: 9px 10px;
+  border: 1px solid #d9e3ef;
+  border-radius: 6px;
+  background: #f7faff;
+  color: #56677a;
+  font-size: 11px;
+  line-height: 1.45;
+}

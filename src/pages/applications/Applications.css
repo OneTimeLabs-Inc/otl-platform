@@ -1,0 +1,273 @@
+/* ==========================================================
+   APPLICATIONS 001
+   Seller application administration
+   ========================================================== */
+
+.applications-page {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+    padding: 28px;
+    gap: 18px;
+    overflow-y: auto;
+}
+
+.applications-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.applications-kicker {
+    display: block;
+    margin-bottom: 5px;
+    color: #2563eb;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .11em;
+}
+
+.applications-header h1 {
+    font-size: 28px;
+}
+
+.applications-header p {
+    margin-top: 5px;
+    color: #6b7280;
+    font-size: 13px;
+}
+
+.applications-refresh {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    min-height: 34px;
+    padding: 0 12px;
+    border: 1px solid #d8dde6;
+    border-radius: 7px;
+    background: #fff;
+    color: #374151;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.applications-summary {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 180px));
+    gap: 10px;
+}
+
+.applications-summary article {
+    display: grid;
+    gap: 2px;
+    padding: 12px 14px;
+    border: 1px solid #d8dde6;
+    border-radius: 8px;
+    background: #fff;
+}
+
+.applications-summary span {
+    color: #6b7280;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+}
+
+.applications-summary strong {
+    font-size: 22px;
+}
+
+.applications-error {
+    padding: 10px 12px;
+    border: 1px solid #fecaca;
+    border-radius: 7px;
+    background: #fff1f2;
+    color: #b42318;
+    font-size: 12px;
+}
+
+.applications-loading,
+.applications-empty {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    min-height: 120px;
+    padding: 22px;
+    border: 1px solid #d8dde6;
+    border-radius: 8px;
+    background: #fff;
+    color: #6b7280;
+}
+
+.applications-empty {
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.applications-empty h2 {
+    font-size: 17px;
+}
+
+.applications-empty p {
+    max-width: 520px;
+    font-size: 12px;
+}
+
+.applications-table-wrap {
+    min-width: 980px;
+    overflow: hidden;
+    border: 1px solid #d8dde6;
+    border-radius: 8px;
+    background: #fff;
+}
+
+.applications-table-head,
+.applications-row {
+    display: grid;
+    grid-template-columns:
+        minmax(180px, 1.2fr)
+        minmax(120px, .75fr)
+        minmax(240px, 1.55fr)
+        110px
+        90px
+        190px;
+    align-items: center;
+    gap: 12px;
+    padding: 0 14px;
+}
+
+.applications-table-head {
+    min-height: 36px;
+    border-bottom: 1px solid #d8dde6;
+    background: #f4f6f9;
+    color: #596273;
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+}
+
+.applications-row {
+    min-height: 62px;
+    border-bottom: 1px solid #edf0f4;
+    color: #4b5563;
+    font-size: 12px;
+}
+
+.applications-row:last-child {
+    border-bottom: 0;
+}
+
+.applications-seller {
+    display: grid;
+    gap: 2px;
+    min-width: 0;
+}
+
+.applications-seller strong {
+    overflow: hidden;
+    color: #111827;
+    font-size: 12px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.applications-seller span {
+    overflow: hidden;
+    color: #7b8494;
+    font-size: 10px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.applications-handle,
+.applications-description {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.applications-status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+    min-height: 22px;
+    padding: 0 8px;
+    border-radius: 999px;
+    font-size: 9px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+}
+
+.applications-status.pending {
+    background: #fff7ed;
+    color: #c2410c;
+}
+
+.applications-status.approved {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.applications-status.rejected {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.applications-actions {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.application-approve,
+.application-reject {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 30px;
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.application-approve {
+    padding: 0 10px;
+    border: 1px solid #86efac;
+    background: #f0fdf4;
+    color: #166534;
+}
+
+.application-reject {
+    width: 30px;
+    border: 1px solid #fecaca;
+    background: #fff;
+    color: #b42318;
+}
+
+.application-complete {
+    color: #15803d;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.application-complete.muted {
+    color: #7b8494;
+}
+
+.applications-spin {
+    animation: applications-spin .9s linear infinite;
+}
+
+@keyframes applications-spin {
+    to { transform: rotate(360deg); }
+}

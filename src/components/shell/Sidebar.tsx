@@ -4,12 +4,15 @@ import {
   Building2,
   FileText,
   Boxes,
+  Megaphone,
   Shield,
   ClipboardList,
   Settings,
 } from "lucide-react";
 
 import type { Page } from "./AdminShell";
+
+import { useAuth } from "../../hooks/useAuth";
 
 import "./Sidebar.css";
 
@@ -22,6 +25,18 @@ export default function Sidebar({
   currentPage,
   onNavigate,
 }: Props) {
+
+  const {
+    user,
+  } =
+    useAuth();
+
+
+  const isPlatformAdmin =
+    user?.email ===
+    "iekhanine@gmail.com";
+
+
   return (
     <aside className="sidebar">
 
@@ -75,12 +90,38 @@ export default function Sidebar({
         </button>
 
         <button
-          className="sidebar-item"
-          disabled
+          className={`sidebar-item ${
+            currentPage === "applications"
+              ? "active"
+              : ""
+          }`}
+          onClick={() =>
+            onNavigate("applications")
+          }
         >
           <Boxes size={18} />
           <span>Applications</span>
         </button>
+
+        {isPlatformAdmin && (
+
+          <button
+            className={`sidebar-item ${
+              currentPage === "appMessages"
+                ? "active"
+                : ""
+            }`}
+            onClick={() =>
+              onNavigate(
+                "appMessages",
+              )
+            }
+          >
+            <Megaphone size={18} />
+            <span>App Broadcasts</span>
+          </button>
+
+        )}
 
         <button
           className="sidebar-item"
