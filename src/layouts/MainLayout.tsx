@@ -19,7 +19,9 @@ import AppMessages from "../pages/appMessages/AppMessages";
 import Applications from "../pages/applications/Applications";
 import Marketplace from "../pages/marketplace/Marketplace";
 import Licensing from "../pages/licensing/Licensing";
-import Consulting from "../pages/consulting/Consulting";
+import ConsultingClients from "../pages/consulting/ConsultingClients";
+import ContractBuilder from "../pages/consulting/ContractBuilder";
+import ConsultingInvoices from "../pages/consulting/ConsultingInvoices";
 
 import type {
   Organization,
@@ -176,11 +178,29 @@ const [
         );
 
 
-      case "consulting":
+      case "consultingClients":
 
         return (
 
-          <Consulting />
+          <ConsultingClients />
+
+        );
+
+
+      case "consultingContracts":
+
+        return (
+
+          <ContractBuilder />
+
+        );
+
+
+      case "consultingInvoices":
+
+        return (
+
+          <ConsultingInvoices />
 
         );
 

@@ -175,3 +175,92 @@
 
     background: #d8dde6;
 }
+/* ==========================================================
+   CONSULTING EXPANDER 002
+   ========================================================== */
+
+.sidebar-group {
+    margin-bottom: 4px;
+}
+
+.sidebar-parent {
+    margin-bottom: 2px;
+}
+
+.sidebar-parent > span:nth-of-type(1) {
+    flex: 1;
+    text-align: left;
+}
+
+.sidebar-expand-icon {
+    display: grid;
+    place-items: center;
+    margin-left: auto;
+    color: #7b8798;
+}
+
+.sidebar-expand-icon svg {
+    color: inherit;
+}
+
+.sidebar-subnav {
+    position: relative;
+    display: grid;
+    gap: 2px;
+    margin: 2px 0 8px 19px;
+    padding: 3px 0 3px 14px;
+}
+
+.sidebar-subnav::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 1px;
+    background: #d7e2f2;
+}
+
+.sidebar-subitem {
+    width: 100%;
+    min-height: 33px;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 0 10px;
+    border: 1px solid transparent;
+    border-radius: 7px;
+    background: transparent;
+    color: #667085;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    transition: background .15s, border-color .15s, color .15s;
+}
+
+.sidebar-subitem svg {
+    flex: 0 0 auto;
+    color: #8b98aa;
+}
+
+.sidebar-subitem:hover {
+    border-color: #d7e5fb;
+    background: #f3f7fd;
+    color: #344054;
+}
+
+.sidebar-subitem:hover svg {
+    color: #2563eb;
+}
+
+.sidebar-subitem.active {
+    border-color: #c7daf7;
+    background: #eaf2ff;
+    color: #174ea6;
+    font-weight: 750;
+}
+
+.sidebar-subitem.active svg {
+    color: #2563eb;
+}
