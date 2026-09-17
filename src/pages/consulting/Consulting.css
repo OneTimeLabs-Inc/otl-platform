@@ -1,0 +1,52 @@
+.consulting-admin { gap:16px; }
+.consulting-form-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; align-items:start; }
+.consulting-card,.consulting-wide-card { border:1px solid #d8dde6; border-radius:9px; background:#fff; box-shadow:0 2px 8px rgba(15,23,42,.035); }
+.consulting-card { padding:16px; }
+.consulting-card-title { display:flex; align-items:center; gap:7px; margin-bottom:13px; color:#182230; font-size:13px; font-weight:750; }
+.consulting-card label { display:block; margin:9px 0 5px; color:#667085; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; }
+.consulting-card input,.consulting-card select,.consulting-card textarea { width:100%; box-sizing:border-box; border:1px solid #cfd6df; border-radius:6px; background:#fff; padding:0 9px; color:#1f2937; font:inherit; font-size:12px; }
+.consulting-card input,.consulting-card select { height:34px; }
+.consulting-card textarea { min-height:68px; padding:8px 9px; resize:vertical; }
+.consulting-two-col { display:grid; grid-template-columns:1fr 1fr; gap:9px; }
+.consulting-primary,.consulting-secondary { display:inline-flex; align-items:center; justify-content:center; gap:6px; height:34px; margin-top:12px; padding:0 13px; border-radius:6px; font-size:12px; font-weight:700; cursor:pointer; }
+.consulting-primary { border:1px solid #1d4ed8; background:#2563eb; color:#fff; }
+.consulting-secondary { margin-top:0; border:1px solid #cfd6df; background:#fff; color:#344054; }
+.consulting-primary:disabled,.consulting-secondary:disabled { opacity:.5; cursor:not-allowed; }
+.consulting-footnote { margin-top:9px; color:#98a2b3; font-size:9.5px; line-height:1.45; }
+.consulting-alert { padding:9px 11px; border-radius:6px; font-size:12px; }
+.consulting-alert.error { border:1px solid #fecaca; background:#fff1f2; color:#b42318; }
+.consulting-alert.success { border:1px solid #bbf7d0; background:#f0fdf4; color:#166534; }
+.consulting-alert.warning { border:1px solid #fde68a; background:#fffbeb; color:#92400e; }
+.consulting-wide-card { overflow:hidden; }
+.consulting-table-header { display:flex; align-items:center; justify-content:space-between; min-height:48px; padding:0 15px; border-bottom:1px solid #d8dde6; background:#fafbfc; }
+.consulting-table-header div { display:grid; gap:2px; }
+.consulting-table-header strong { font-size:12px; }
+.consulting-table-header span { color:#98a2b3; font-size:9.5px; }
+.consulting-table-wrap { overflow-x:auto; }
+.consulting-table { width:100%; border-collapse:collapse; font-size:11px; }
+.consulting-table th { padding:9px 11px; background:#f5f7fa; border-bottom:1px solid #d8dde6; color:#667085; font-size:9px; text-align:left; text-transform:uppercase; letter-spacing:.05em; }
+.consulting-table td { padding:9px 11px; border-bottom:1px solid #edf0f4; color:#344054; vertical-align:middle; }
+.consulting-table tr:last-child td { border-bottom:0; }
+.consulting-table td strong,.consulting-table td small { display:block; }
+.consulting-table td small { margin-top:2px; color:#98a2b3; font-size:9px; }
+.consulting-status { display:inline-flex; padding:3px 7px; border-radius:999px; background:#eef2f6; color:#475467; font-size:9px; font-weight:750; text-transform:uppercase; }
+.consulting-status.accepted,.consulting-status.paid,.consulting-status.completed { background:#dcfce7; color:#166534; }
+.consulting-status.sent,.consulting-status.open { background:#dbeafe; color:#1d4ed8; }
+.consulting-status.cancelled,.consulting-status.void { background:#fee2e2; color:#991b1b; }
+.consulting-status-select { min-height:28px; border:1px solid #cfd6df; border-radius:5px; background:#fff; color:#475467; font-size:10px; }
+.consulting-actions { display:flex; gap:6px; align-items:center; }
+.consulting-actions a,.consulting-actions button { min-height:27px; display:inline-flex; align-items:center; gap:4px; padding:0 8px; border:1px solid #cfd6df; border-radius:5px; background:#fff; color:#475467; font-size:10px; font-weight:700; cursor:pointer; }
+.consulting-empty { padding:20px !important; text-align:center; color:#98a2b3 !important; }
+@media (max-width:1100px) { .consulting-form-grid { grid-template-columns:1fr; } }
+@media (max-width:700px) { .consulting-two-col { grid-template-columns:1fr; } }
+
+.consulting-modal-backdrop { position:fixed; inset:0; z-index:500; display:grid; place-items:center; padding:28px; background:rgba(15,23,42,.48); }
+.consulting-modal { width:min(820px,100%); max-height:86vh; display:flex; flex-direction:column; overflow:hidden; border:1px solid #cfd6df; border-radius:10px; background:#fff; box-shadow:0 24px 70px rgba(15,23,42,.22); }
+.consulting-modal-head { min-height:58px; display:flex; align-items:center; justify-content:space-between; gap:20px; padding:10px 14px; border-bottom:1px solid #d8dde6; background:#f8fafc; }
+.consulting-modal-head div { display:grid; gap:2px; }
+.consulting-modal-head strong { font-size:13px; }
+.consulting-modal-head span { color:#98a2b3; font-size:10px; }
+.consulting-modal-head button,.consulting-modal-actions button { min-height:30px; padding:0 10px; border:1px solid #cfd6df; border-radius:5px; background:#fff; color:#475467; font-size:10px; font-weight:700; cursor:pointer; }
+.consulting-modal pre { flex:1; overflow:auto; margin:0; padding:22px; white-space:pre-wrap; color:#344054; background:#fff; font:11px/1.65 Consolas,"Courier New",monospace; }
+.consulting-modal-actions { display:flex; justify-content:flex-end; gap:7px; padding:10px 14px; border-top:1px solid #d8dde6; background:#f8fafc; }
+@media print { body * { visibility:hidden !important; } .consulting-modal,.consulting-modal * { visibility:visible !important; } .consulting-modal { position:absolute; inset:0; width:100%; max-height:none; border:0; box-shadow:none; } .consulting-modal-head button,.consulting-modal-actions { display:none !important; } }

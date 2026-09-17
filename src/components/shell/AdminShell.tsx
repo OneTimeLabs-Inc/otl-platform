@@ -14,6 +14,7 @@ export type Page =
   | "applications"
   | "marketplace"
   | "licensing"
+  | "consulting"
   | "appMessages"
   | "roles"
   | "audit"

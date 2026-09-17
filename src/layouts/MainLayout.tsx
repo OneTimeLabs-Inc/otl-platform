@@ -19,6 +19,7 @@ import AppMessages from "../pages/appMessages/AppMessages";
 import Applications from "../pages/applications/Applications";
 import Marketplace from "../pages/marketplace/Marketplace";
 import Licensing from "../pages/licensing/Licensing";
+import Consulting from "../pages/consulting/Consulting";
 
 import type {
   Organization,
@@ -171,6 +172,15 @@ const [
         return (
 
           <Licensing />
+
+        );
+
+
+      case "consulting":
+
+        return (
+
+          <Consulting />
 
         );
 

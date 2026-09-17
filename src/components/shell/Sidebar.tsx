@@ -10,6 +10,7 @@ import {
   Shield,
   ClipboardList,
   Settings,
+  BriefcaseBusiness,
 } from "lucide-react";
 
 import type { Page } from "./AdminShell";
@@ -112,6 +113,16 @@ export default function Sidebar({
           <KeyRound size={18} />
           <span>Software Licensing</span>
         </button>
+
+        {isPlatformAdmin && (
+          <button
+            className={`sidebar-item ${currentPage === "consulting" ? "active" : ""}`}
+            onClick={() => onNavigate("consulting")}
+          >
+            <BriefcaseBusiness size={18} />
+            <span>Consulting</span>
+          </button>
+        )}
 
 
         {isPlatformAdmin && (
