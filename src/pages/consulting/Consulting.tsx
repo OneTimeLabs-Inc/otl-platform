@@ -238,7 +238,7 @@ export default function Consulting() {
             <td>{invoice.description}</td><td>{money(invoice.amountCents)}</td>
             <td><span className={`consulting-status ${invoice.status}`}>{invoice.status}</span></td>
             <td className="consulting-actions">
-              {invoice.stripeInvoiceUrl && <a href={invoice.stripeInvoiceUrl} target="_blank" rel="noreferrer">Open</a>}
+              {invoice.stripeInvoiceUrl && <a href={invoice.stripeInvoiceUrl} target="_blank" rel="noreferrer">Open payment page</a>}
               {invoice.status === "draft" && <button onClick={() => void run(() => sendStripeInvoice(invoice.id), "Invoice sent through Stripe.")} disabled={working}><Send size={12} /> Send</button>}
             </td>
           </tr>)}

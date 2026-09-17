@@ -155,12 +155,9 @@ export default async function handler(req: any, res: any) {
         const { error } = await supabase.from("consulting_clients").update({ stripe_customer_id: stripeCustomerId, updated_at: new Date().toISOString() }).eq("id", clientId);
         if (error) throw error;
       }
-      const itemBody = new URLSearchParams();
-      itemBody.set("customer", stripeCustomerId);
-      itemBody.set("amount", String(amountCents));
-      itemBody.set("currency", "usd");
-      itemBody.set("description", description);
-      await stripeRequest("/invoiceitems", itemBody);
+      // Create the draft invoice first. Stripe's standalone invoice creation currently
+      // excludes unattached pending invoice items by default, which previously produced
+      // $0 invoices while leaving the intended charge stranded as a pending item.
       const invoiceBody = new URLSearchParams();
       invoiceBody.set("customer", stripeCustomerId);
       invoiceBody.set("collection_method", "send_invoice");
@@ -178,7 +175,18 @@ export default async function handler(req: any, res: any) {
 
       invoiceBody.set("metadata[platform_client_id]", clientId);
       if (contractId) invoiceBody.set("metadata[platform_contract_id]", contractId);
+
       const stripeInvoice = await stripeRequest("/invoices", invoiceBody);
+
+      // Attach this exact line item to this exact draft invoice. This is deterministic
+      // and prevents unrelated pending items for the same customer from being swept in.
+      const itemBody = new URLSearchParams();
+      itemBody.set("customer", stripeCustomerId);
+      itemBody.set("invoice", stripeInvoice.id);
+      itemBody.set("amount", String(amountCents));
+      itemBody.set("currency", "usd");
+      itemBody.set("description", description);
+      await stripeRequest("/invoiceitems", itemBody);
       const { data, error } = await supabase.from("consulting_invoices").insert({
         client_id: clientId, contract_id: contractId, stripe_invoice_id: stripeInvoice.id,
         stripe_invoice_url: stripeInvoice.hosted_invoice_url ?? null, status: stripeInvoice.status ?? "draft",
