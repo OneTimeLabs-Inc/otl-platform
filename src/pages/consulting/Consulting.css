@@ -167,30 +167,39 @@
   .contract-brand span { display:none; }
 }
 
+/* Hidden during normal screen rendering. A copy is appended directly to
+   <body> only while the browser print dialog is being prepared. */
+[data-print-contract-copy] {
+  display:none;
+}
+
 @media print {
-  @page { size:Letter; margin:0.45in; }
+  @page {
+    size:Letter;
+    margin:0.45in;
+  }
 
   html,
-  body,
-  #root {
+  body {
     height:auto !important;
     min-height:0 !important;
     overflow:visible !important;
     background:#fff !important;
   }
 
-  body * { visibility:hidden !important; }
+  body.contract-print-mode {
+    margin:0 !important;
+    padding:0 !important;
+  }
 
-  /*
-   * The contract normally lives inside a fixed-height modal with its own
-   * scrolling container. Those screen-only constraints clip the browser's
-   * print layout to one sheet. Restore normal document flow for printing so
-   * the browser can paginate the agreement across as many pages as needed.
-   */
-  .consulting-modal-backdrop,
-  .consulting-contract-modal,
-  .consulting-contract-scroll,
-  [data-print-contract] {
+  /* Do not use visibility:hidden on the live app tree. Some Chromium print
+     paths keep the hidden ancestor state and produce a completely blank PDF.
+     Hide the app root entirely and print only the detached contract copy. */
+  body.contract-print-mode > * {
+    display:none !important;
+  }
+
+  body.contract-print-mode > [data-print-contract-copy] {
     position:static !important;
     inset:auto !important;
     display:block !important;
@@ -200,69 +209,57 @@
     max-height:none !important;
     min-height:0 !important;
     margin:0 !important;
-    padding:0 !important;
+    padding:0 28px 20px !important;
     overflow:visible !important;
     border:0 !important;
     border-radius:0 !important;
     box-shadow:none !important;
     background:#fff !important;
-  }
-
-  .consulting-modal-backdrop,
-  .consulting-contract-modal,
-  .consulting-contract-scroll,
-  [data-print-contract],
-  [data-print-contract] * {
-    visibility:visible !important;
-  }
-
-  .consulting-modal-toolbar { display:none !important; }
-
-  [data-print-contract] {
-    box-sizing:border-box !important;
-    padding:0 28px 20px !important;
     color:#1f2937 !important;
+    box-sizing:border-box !important;
   }
 
-  .contract-document-header {
+  [data-print-contract-copy] .contract-document-header {
     margin:0 -28px;
     padding:20px 28px;
     -webkit-print-color-adjust:exact;
     print-color-adjust:exact;
   }
 
-  .contract-summary-grid,
-  .contract-callout,
-  .contract-section-heading > span,
-  .contract-terms-grid > div,
-  .contract-document-footer {
+  [data-print-contract-copy] .contract-summary-grid,
+  [data-print-contract-copy] .contract-callout,
+  [data-print-contract-copy] .contract-section-heading > span,
+  [data-print-contract-copy] .contract-terms-grid > div,
+  [data-print-contract-copy] .contract-document-footer {
     -webkit-print-color-adjust:exact;
     print-color-adjust:exact;
   }
 
-  .contract-document-footer {
+  [data-print-contract-copy] .contract-document-footer {
     margin:28px -28px -20px;
     padding:10px 28px;
   }
 
-  .contract-section-heading,
-  .contract-summary-item,
-  .contract-fee-table > div,
-  .contract-callout,
-  .contract-signatures {
+  [data-print-contract-copy] .contract-section-heading,
+  [data-print-contract-copy] .contract-summary-item,
+  [data-print-contract-copy] .contract-fee-table > div,
+  [data-print-contract-copy] .contract-callout,
+  [data-print-contract-copy] .contract-signatures {
     break-inside:avoid;
     page-break-inside:avoid;
   }
 
-  .contract-section {
+  [data-print-contract-copy] .contract-section {
     break-inside:auto;
     page-break-inside:auto;
   }
 
-  .contract-section-heading {
+  [data-print-contract-copy] .contract-section-heading {
     break-after:avoid;
     page-break-after:avoid;
   }
 
-  .contract-hero { padding-top:28px; }
+  [data-print-contract-copy] .contract-hero {
+    padding-top:28px;
+  }
 }

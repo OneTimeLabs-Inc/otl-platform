@@ -138,6 +138,40 @@ function money(cents: number | null) {
   return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(cents / 100);
 }
 
+
+function printContractDocument() {
+  const source = document.querySelector<HTMLElement>("[data-print-contract]");
+  if (!source) return;
+
+  // Print a detached copy of the contract instead of trying to print the
+  // fixed modal/app shell. This avoids clipping, hidden ancestors, and
+  // browser print-layout bugs while preserving the exact rendered contract.
+  const printCopy = source.cloneNode(true) as HTMLElement;
+  printCopy.removeAttribute("data-print-contract");
+  printCopy.setAttribute("data-print-contract-copy", "true");
+
+  document.body.appendChild(printCopy);
+  document.body.classList.add("contract-print-mode");
+
+  let cleanedUp = false;
+  const cleanup = () => {
+    if (cleanedUp) return;
+    cleanedUp = true;
+    document.body.classList.remove("contract-print-mode");
+    printCopy.remove();
+    window.removeEventListener("afterprint", cleanup);
+  };
+
+  window.addEventListener("afterprint", cleanup);
+
+  // Give the browser one paint cycle to apply the print-only layout before
+  // opening the print dialog.
+  window.requestAnimationFrame(() => {
+    window.print();
+    cleanup();
+  });
+}
+
 export default function Consulting() {
   const [data, setData] = useState(emptySnapshot);
   const [loading, setLoading] = useState(true);
@@ -442,7 +476,7 @@ export default function Consulting() {
               </div>
               <div className="consulting-modal-toolbar-actions">
                 <button onClick={() => void navigator.clipboard.writeText(previewContract.contractText || "")}><Copy size={12} /> Copy text</button>
-                <button onClick={() => window.print()}><Printer size={12} /> Print / Save PDF</button>
+                <button onClick={printContractDocument}><Printer size={12} /> Print / Save PDF</button>
                 <button onClick={() => setPreviewContractId("")}><X size={13} /> Close</button>
               </div>
             </div>
