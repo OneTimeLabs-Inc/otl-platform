@@ -169,12 +169,100 @@
 
 @media print {
   @page { size:Letter; margin:0.45in; }
+
+  html,
+  body,
+  #root {
+    height:auto !important;
+    min-height:0 !important;
+    overflow:visible !important;
+    background:#fff !important;
+  }
+
   body * { visibility:hidden !important; }
-  [data-print-contract],[data-print-contract] * { visibility:visible !important; }
-  [data-print-contract] { position:absolute; inset:0 auto auto 0; width:100%; max-width:none; margin:0; padding:0 28px 20px; box-shadow:none; }
-  .contract-document-header { margin:0 -28px; padding:20px 28px; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
-  .contract-summary-grid,.contract-callout,.contract-section-heading > span,.contract-terms-grid > div,.contract-document-footer { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
-  .contract-document-footer { margin:28px -28px -20px; padding:10px 28px; }
-  .contract-section,.contract-callout,.contract-signatures { break-inside:avoid; }
+
+  /*
+   * The contract normally lives inside a fixed-height modal with its own
+   * scrolling container. Those screen-only constraints clip the browser's
+   * print layout to one sheet. Restore normal document flow for printing so
+   * the browser can paginate the agreement across as many pages as needed.
+   */
+  .consulting-modal-backdrop,
+  .consulting-contract-modal,
+  .consulting-contract-scroll,
+  [data-print-contract] {
+    position:static !important;
+    inset:auto !important;
+    display:block !important;
+    width:auto !important;
+    max-width:none !important;
+    height:auto !important;
+    max-height:none !important;
+    min-height:0 !important;
+    margin:0 !important;
+    padding:0 !important;
+    overflow:visible !important;
+    border:0 !important;
+    border-radius:0 !important;
+    box-shadow:none !important;
+    background:#fff !important;
+  }
+
+  .consulting-modal-backdrop,
+  .consulting-contract-modal,
+  .consulting-contract-scroll,
+  [data-print-contract],
+  [data-print-contract] * {
+    visibility:visible !important;
+  }
+
+  .consulting-modal-toolbar { display:none !important; }
+
+  [data-print-contract] {
+    box-sizing:border-box !important;
+    padding:0 28px 20px !important;
+    color:#1f2937 !important;
+  }
+
+  .contract-document-header {
+    margin:0 -28px;
+    padding:20px 28px;
+    -webkit-print-color-adjust:exact;
+    print-color-adjust:exact;
+  }
+
+  .contract-summary-grid,
+  .contract-callout,
+  .contract-section-heading > span,
+  .contract-terms-grid > div,
+  .contract-document-footer {
+    -webkit-print-color-adjust:exact;
+    print-color-adjust:exact;
+  }
+
+  .contract-document-footer {
+    margin:28px -28px -20px;
+    padding:10px 28px;
+  }
+
+  .contract-section-heading,
+  .contract-summary-item,
+  .contract-fee-table > div,
+  .contract-callout,
+  .contract-signatures {
+    break-inside:avoid;
+    page-break-inside:avoid;
+  }
+
+  .contract-section {
+    break-inside:auto;
+    page-break-inside:auto;
+  }
+
+  .contract-section-heading {
+    break-after:avoid;
+    page-break-after:avoid;
+  }
+
   .contract-hero { padding-top:28px; }
 }
