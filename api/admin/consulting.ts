@@ -194,10 +194,23 @@ export default async function handler(req: any, res: any) {
 
     res.status(400).json({ error: "Unknown consulting action." });
   } catch (reason) {
-    const message = reason instanceof Error ? reason.message : "Unexpected consulting error.";
+    let message = "Unexpected consulting error.";
+
+    if (reason instanceof Error) {
+      message = reason.message;
+    } else if (
+      reason &&
+      typeof reason === "object" &&
+      "message" in reason &&
+      typeof (reason as { message?: unknown }).message === "string"
+    ) {
+      message = (reason as { message: string }).message;
+    }
+
     if (message === "AUTH_REQUIRED") { res.status(401).json({ error: "Sign in to Platform." }); return; }
     if (message === "ADMIN_REQUIRED") { res.status(403).json({ error: "Platform administrator access is required." }); return; }
     if (message === "STRIPE_NOT_CONFIGURED") { res.status(503).json({ error: "Stripe is not configured. Add STRIPE_SECRET_KEY to Platform." }); return; }
+
     console.error("CONSULTING API ERROR:", reason);
     res.status(500).json({ error: message });
   }

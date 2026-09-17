@@ -154,7 +154,7 @@ export default function Consulting() {
         </button>
       </div>
 
-      {!data.stripeConfigured && !loading && (
+      {!data.stripeConfigured && !loading && !error && (
         <div className="consulting-alert warning">Stripe is not configured. Add STRIPE_SECRET_KEY in Platform before creating invoices.</div>
       )}
       {error && <div className="consulting-alert error">{error}</div>}
