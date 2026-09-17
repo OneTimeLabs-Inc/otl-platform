@@ -212,7 +212,7 @@ export default function Consulting() {
             <div><label>Due in days</label><input value={dueDays} onChange={e => setDueDays(e.target.value)} inputMode="numeric" /></div>
           </div>
           <button className="consulting-primary" onClick={() => void addInvoice()} disabled={working || !data.stripeConfigured || !invoiceClientId || !invoiceDescription.trim()}>Create Stripe Draft</button>
-          <div className="consulting-footnote">Invoices are created as drafts first. Sending is a separate action below.</div>
+          <div className="consulting-footnote">Invoices are created as drafts first. Customers can pay by card or US bank account (ACH). Sending is a separate action below.</div>
         </section>
       </div>
 

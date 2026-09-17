@@ -166,6 +166,16 @@ export default async function handler(req: any, res: any) {
       invoiceBody.set("collection_method", "send_invoice");
       invoiceBody.set("days_until_due", String(dueDays));
       invoiceBody.set("auto_advance", "false");
+
+      // Explicitly allow card and US bank account (ACH Direct Debit) payments.
+      // Stripe owns collection, bank-account linking, verification, and mandate handling.
+      invoiceBody.set("payment_settings[payment_method_types][0]", "card");
+      invoiceBody.set("payment_settings[payment_method_types][1]", "us_bank_account");
+      invoiceBody.set(
+        "payment_settings[payment_method_options][us_bank_account][verification_method]",
+        "automatic",
+      );
+
       invoiceBody.set("metadata[platform_client_id]", clientId);
       if (contractId) invoiceBody.set("metadata[platform_contract_id]", contractId);
       const stripeInvoice = await stripeRequest("/invoices", invoiceBody);
@@ -210,7 +220,6 @@ export default async function handler(req: any, res: any) {
     if (message === "AUTH_REQUIRED") { res.status(401).json({ error: "Sign in to Platform." }); return; }
     if (message === "ADMIN_REQUIRED") { res.status(403).json({ error: "Platform administrator access is required." }); return; }
     if (message === "STRIPE_NOT_CONFIGURED") { res.status(503).json({ error: "Stripe is not configured. Add STRIPE_SECRET_KEY to Platform." }); return; }
-
     console.error("CONSULTING API ERROR:", reason);
     res.status(500).json({ error: message });
   }
