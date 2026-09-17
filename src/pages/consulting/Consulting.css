@@ -1,15 +1,19 @@
 .consulting-admin { gap:16px; }
-.consulting-form-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; align-items:start; }
+.consulting-form-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; align-items:start; }
 .consulting-card,.consulting-wide-card { border:1px solid #d8dde6; border-radius:9px; background:#fff; box-shadow:0 2px 8px rgba(15,23,42,.035); }
 .consulting-card { padding:16px; }
 .consulting-card-title { display:flex; align-items:center; gap:7px; margin-bottom:13px; color:#182230; font-size:13px; font-weight:750; }
+.consulting-new-badge { display:inline-flex; align-items:center; gap:4px; margin-left:auto; padding:3px 7px; border:1px solid #bfdbfe; border-radius:999px; background:#eff6ff; color:#1d4ed8; font-size:9px; font-weight:800; text-transform:uppercase; letter-spacing:.04em; }
 .consulting-card label { display:block; margin:9px 0 5px; color:#667085; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; }
+.consulting-card label span { color:#98a2b3; font-size:8.5px; font-weight:600; text-transform:none; letter-spacing:0; }
 .consulting-card input,.consulting-card select,.consulting-card textarea { width:100%; box-sizing:border-box; border:1px solid #cfd6df; border-radius:6px; background:#fff; padding:0 9px; color:#1f2937; font:inherit; font-size:12px; }
 .consulting-card input,.consulting-card select { height:34px; }
-.consulting-card textarea { min-height:68px; padding:8px 9px; resize:vertical; }
+.consulting-card textarea { min-height:68px; padding:8px 9px; resize:vertical; line-height:1.45; }
+.consulting-card input:focus,.consulting-card select:focus,.consulting-card textarea:focus { outline:none; border-color:#84adff; box-shadow:0 0 0 3px rgba(37,99,235,.09); }
 .consulting-two-col { display:grid; grid-template-columns:1fr 1fr; gap:9px; }
 .consulting-primary,.consulting-secondary { display:inline-flex; align-items:center; justify-content:center; gap:6px; height:34px; margin-top:12px; padding:0 13px; border-radius:6px; font-size:12px; font-weight:700; cursor:pointer; }
 .consulting-primary { border:1px solid #1d4ed8; background:#2563eb; color:#fff; }
+.consulting-primary:hover { background:#1d4ed8; }
 .consulting-secondary { margin-top:0; border:1px solid #cfd6df; background:#fff; color:#344054; }
 .consulting-primary:disabled,.consulting-secondary:disabled { opacity:.5; cursor:not-allowed; }
 .consulting-footnote { margin-top:9px; color:#98a2b3; font-size:9.5px; line-height:1.45; }
@@ -17,6 +21,16 @@
 .consulting-alert.error { border:1px solid #fecaca; background:#fff1f2; color:#b42318; }
 .consulting-alert.success { border:1px solid #bbf7d0; background:#f0fdf4; color:#166534; }
 .consulting-alert.warning { border:1px solid #fde68a; background:#fffbeb; color:#92400e; }
+
+.consulting-contract-builder { grid-column:1 / -1; }
+.contract-builder-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:0 10px; }
+.contract-builder-span-2 { grid-column:span 2; }
+.contract-builder-section-title { margin:18px 0 4px; padding-top:13px; border-top:1px solid #edf0f4; color:#344054; font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.06em; }
+.contract-builder-text-grid { display:grid; grid-template-columns:1fr 1fr; gap:0 10px; }
+.contract-builder-footer { display:flex; align-items:flex-end; justify-content:space-between; gap:16px; margin-top:4px; }
+.contract-builder-footer .consulting-footnote { max-width:620px; margin:0; }
+.contract-builder-footer .consulting-primary { flex:0 0 auto; }
+
 .consulting-wide-card { overflow:hidden; }
 .consulting-table-header { display:flex; align-items:center; justify-content:space-between; min-height:48px; padding:0 15px; border-bottom:1px solid #d8dde6; background:#fafbfc; }
 .consulting-table-header div { display:grid; gap:2px; }
@@ -35,18 +49,132 @@
 .consulting-status.cancelled,.consulting-status.void { background:#fee2e2; color:#991b1b; }
 .consulting-status-select { min-height:28px; border:1px solid #cfd6df; border-radius:5px; background:#fff; color:#475467; font-size:10px; }
 .consulting-actions { display:flex; gap:6px; align-items:center; }
-.consulting-actions a,.consulting-actions button { min-height:27px; display:inline-flex; align-items:center; gap:4px; padding:0 8px; border:1px solid #cfd6df; border-radius:5px; background:#fff; color:#475467; font-size:10px; font-weight:700; cursor:pointer; }
+.consulting-actions a,.consulting-actions button { min-height:27px; display:inline-flex; align-items:center; gap:4px; padding:0 8px; border:1px solid #cfd6df; border-radius:5px; background:#fff; color:#475467; font-size:10px; font-weight:700; cursor:pointer; text-decoration:none; }
+.consulting-actions a:hover,.consulting-actions button:hover { border-color:#98a2b3; color:#1f2937; }
 .consulting-empty { padding:20px !important; text-align:center; color:#98a2b3 !important; }
-@media (max-width:1100px) { .consulting-form-grid { grid-template-columns:1fr; } }
-@media (max-width:700px) { .consulting-two-col { grid-template-columns:1fr; } }
 
-.consulting-modal-backdrop { position:fixed; inset:0; z-index:500; display:grid; place-items:center; padding:28px; background:rgba(15,23,42,.48); }
-.consulting-modal { width:min(820px,100%); max-height:86vh; display:flex; flex-direction:column; overflow:hidden; border:1px solid #cfd6df; border-radius:10px; background:#fff; box-shadow:0 24px 70px rgba(15,23,42,.22); }
-.consulting-modal-head { min-height:58px; display:flex; align-items:center; justify-content:space-between; gap:20px; padding:10px 14px; border-bottom:1px solid #d8dde6; background:#f8fafc; }
-.consulting-modal-head div { display:grid; gap:2px; }
-.consulting-modal-head strong { font-size:13px; }
-.consulting-modal-head span { color:#98a2b3; font-size:10px; }
-.consulting-modal-head button,.consulting-modal-actions button { min-height:30px; padding:0 10px; border:1px solid #cfd6df; border-radius:5px; background:#fff; color:#475467; font-size:10px; font-weight:700; cursor:pointer; }
-.consulting-modal pre { flex:1; overflow:auto; margin:0; padding:22px; white-space:pre-wrap; color:#344054; background:#fff; font:11px/1.65 Consolas,"Courier New",monospace; }
-.consulting-modal-actions { display:flex; justify-content:flex-end; gap:7px; padding:10px 14px; border-top:1px solid #d8dde6; background:#f8fafc; }
-@media print { body * { visibility:hidden !important; } .consulting-modal,.consulting-modal * { visibility:visible !important; } .consulting-modal { position:absolute; inset:0; width:100%; max-height:none; border:0; box-shadow:none; } .consulting-modal-head button,.consulting-modal-actions { display:none !important; } }
+.consulting-modal-backdrop { position:fixed; inset:0; z-index:500; display:grid; place-items:center; padding:24px; background:rgba(15,23,42,.58); backdrop-filter:blur(2px); }
+.consulting-contract-modal { width:min(1120px,100%); height:min(92vh,980px); display:flex; flex-direction:column; overflow:hidden; border:1px solid #cfd6df; border-radius:12px; background:#e8edf3; box-shadow:0 28px 90px rgba(15,23,42,.3); }
+.consulting-modal-toolbar { min-height:58px; display:flex; align-items:center; justify-content:space-between; gap:20px; padding:10px 14px; border-bottom:1px solid #cfd6df; background:#fff; }
+.consulting-modal-toolbar > div:first-child { display:grid; gap:2px; }
+.consulting-modal-toolbar strong { color:#182230; font-size:13px; }
+.consulting-modal-toolbar span { color:#98a2b3; font-size:10px; }
+.consulting-modal-toolbar-actions { display:flex; gap:7px; flex-wrap:wrap; justify-content:flex-end; }
+.consulting-modal-toolbar-actions button { min-height:31px; display:inline-flex; align-items:center; gap:5px; padding:0 10px; border:1px solid #cfd6df; border-radius:6px; background:#fff; color:#475467; font-size:10px; font-weight:700; cursor:pointer; }
+.consulting-modal-toolbar-actions button:hover { background:#f8fafc; color:#1f2937; }
+.consulting-contract-scroll { flex:1; overflow:auto; padding:32px; }
+
+.contract-document { width:min(850px,100%); box-sizing:border-box; margin:0 auto; padding:0 54px 34px; background:#fff; color:#1f2937; box-shadow:0 8px 30px rgba(15,23,42,.12); font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+.contract-document-header { display:flex; align-items:center; justify-content:space-between; gap:24px; margin:0 -54px; padding:26px 54px 22px; border-bottom:1px solid #d8dde6; background:#0f1f35; color:#fff; }
+.contract-brand { display:flex; align-items:center; gap:12px; }
+.contract-brand-mark { width:40px; height:40px; display:grid; place-items:center; border:1px solid rgba(255,255,255,.24); border-radius:9px; background:rgba(255,255,255,.08); font-size:14px; font-weight:850; letter-spacing:-.04em; }
+.contract-brand > div:last-child { display:grid; gap:2px; }
+.contract-brand strong { font-size:15px; letter-spacing:-.01em; }
+.contract-brand span { color:#b9c7da; font-size:8.5px; letter-spacing:.035em; text-transform:uppercase; }
+.contract-number-block { display:grid; justify-items:end; gap:2px; text-align:right; }
+.contract-number-block > span { color:#93a6bf; font-size:8px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; }
+.contract-number-block > strong { font-size:10px; font-weight:800; letter-spacing:.04em; }
+.contract-state { margin-top:4px; padding:3px 7px; border:1px solid rgba(255,255,255,.18); border-radius:999px; color:#d8e4f4; font-size:7.5px; font-style:normal; font-weight:800; text-transform:uppercase; letter-spacing:.06em; }
+.contract-state.accepted,.contract-state.completed { background:rgba(34,197,94,.18); color:#bbf7d0; }
+.contract-state.sent { background:rgba(59,130,246,.2); color:#bfdbfe; }
+.contract-state.cancelled { background:rgba(239,68,68,.16); color:#fecaca; }
+
+.contract-hero { padding:40px 0 28px; }
+.contract-eyebrow { margin-bottom:8px; color:#2563eb; font-size:9px; font-weight:850; text-transform:uppercase; letter-spacing:.11em; }
+.contract-hero h1 { max-width:620px; margin:0; color:#132238; font-size:29px; line-height:1.08; letter-spacing:-.035em; }
+.contract-hero p { max-width:610px; margin:12px 0 0; color:#667085; font-size:11px; line-height:1.6; }
+
+.contract-summary-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); margin-bottom:30px; border:1px solid #dce3ec; border-radius:9px; overflow:hidden; background:#f8fafc; }
+.contract-summary-item { min-height:104px; display:flex; flex-direction:column; gap:4px; padding:15px; border-right:1px solid #dce3ec; }
+.contract-summary-item:last-child { border-right:0; }
+.contract-summary-item svg { margin-bottom:5px; color:#2563eb; }
+.contract-summary-item > span { color:#98a2b3; font-size:7.5px; font-weight:800; text-transform:uppercase; letter-spacing:.07em; }
+.contract-summary-item > strong { color:#253449; font-size:10px; line-height:1.35; }
+.contract-summary-item > small { color:#7c889b; font-size:8px; line-height:1.35; }
+
+.contract-section { margin-top:27px; }
+.contract-section-heading { display:flex; align-items:center; gap:10px; padding-bottom:9px; border-bottom:1px solid #dce3ec; }
+.contract-section-heading > span { width:26px; height:26px; display:grid; place-items:center; border-radius:6px; background:#eaf2ff; color:#1d4ed8; font-size:8px; font-weight:850; }
+.contract-section-heading > div { display:grid; gap:1px; }
+.contract-section-heading strong { color:#1d2939; font-size:11px; }
+.contract-section-heading small { color:#98a2b3; font-size:7.5px; }
+.contract-section-heading.compact { border-bottom:0; }
+.contract-section-body { padding:12px 0 0 36px; color:#4b5565; font-size:9.5px; line-height:1.65; }
+.contract-section-body p { margin:0; white-space:pre-line; }
+.contract-section-body ul { margin:0; padding-left:15px; }
+.contract-section-body li { margin:3px 0; }
+.contract-section-split { display:grid; grid-template-columns:1fr 1fr; gap:34px; }
+.contract-section-split .contract-section-body { padding-left:36px; }
+
+.contract-fee-table { overflow:hidden; border:1px solid #dce3ec; border-radius:8px; }
+.contract-fee-table > div { display:grid; grid-template-columns:1.15fr 1fr; gap:16px; padding:9px 11px; border-bottom:1px solid #edf1f5; }
+.contract-fee-table > div:last-child { border-bottom:0; }
+.contract-fee-table span { color:#7c889b; font-size:8.5px; }
+.contract-fee-table strong { color:#27364a; font-size:9px; text-align:right; text-transform:capitalize; }
+.contract-muted { margin-top:10px !important; color:#98a2b3; font-size:8px; }
+
+.contract-callout { display:flex; gap:10px; margin-top:26px; padding:13px 15px; border:1px solid #bfdbfe; border-radius:8px; background:#eff6ff; color:#1e3a8a; }
+.contract-callout svg { flex:0 0 auto; margin-top:1px; }
+.contract-callout div { display:grid; gap:3px; }
+.contract-callout strong { font-size:9px; }
+.contract-callout p { margin:0; color:#46618f; font-size:8.5px; line-height:1.5; }
+
+.contract-terms-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.contract-terms-grid > div { padding:12px; border:1px solid #e4e9ef; border-radius:7px; background:#fbfcfd; }
+.contract-terms-grid svg { margin-bottom:6px; color:#2563eb; }
+.contract-terms-grid strong { display:block; margin-bottom:4px; color:#344054; font-size:8.5px; }
+.contract-terms-grid p { color:#667085; font-size:8px; line-height:1.5; }
+.contract-legacy-text { margin:0; white-space:pre-wrap; color:#667085; font:8.5px/1.6 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
+
+.contract-signatures { display:grid; grid-template-columns:1fr 1fr; gap:54px; margin-top:44px; padding-top:22px; border-top:2px solid #132238; }
+.contract-signatures > div { display:grid; gap:3px; }
+.contract-signatures span { margin-bottom:26px; color:#475467; font-size:8px; font-weight:800; text-transform:uppercase; letter-spacing:.06em; }
+.signature-line { border-bottom:1px solid #98a2b3; }
+.contract-signatures strong { margin-top:7px; color:#1f2937; font-size:9.5px; }
+.contract-signatures small { color:#98a2b3; font-size:8px; }
+.contract-signatures em { margin-top:11px; color:#667085; font-size:8px; font-style:normal; }
+
+.contract-document-footer { display:flex; align-items:center; justify-content:space-between; gap:16px; margin:38px -54px -34px; padding:13px 54px; border-top:1px solid #e4e9ef; background:#f8fafc; color:#98a2b3; font-size:7px; }
+
+@media (max-width:1100px) {
+  .contract-builder-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .contract-builder-span-2 { grid-column:span 2; }
+}
+
+@media (max-width:850px) {
+  .consulting-form-grid { grid-template-columns:1fr; }
+  .consulting-contract-builder { grid-column:auto; }
+  .consulting-contract-scroll { padding:14px; }
+  .contract-document { padding:0 28px 26px; }
+  .contract-document-header { margin:0 -28px; padding:22px 28px; }
+  .contract-summary-grid { grid-template-columns:1fr 1fr; }
+  .contract-summary-item:nth-child(2) { border-right:0; }
+  .contract-summary-item:nth-child(-n+2) { border-bottom:1px solid #dce3ec; }
+  .contract-section-split,.contract-terms-grid { grid-template-columns:1fr; gap:16px; }
+  .contract-document-footer { margin:34px -28px -26px; padding:12px 28px; }
+}
+
+@media (max-width:700px) {
+  .consulting-two-col,.contract-builder-grid,.contract-builder-text-grid { grid-template-columns:1fr; }
+  .contract-builder-span-2 { grid-column:auto; }
+  .contract-builder-footer { align-items:stretch; flex-direction:column; }
+  .consulting-modal-backdrop { padding:0; }
+  .consulting-contract-modal { width:100%; height:100vh; border:0; border-radius:0; }
+  .consulting-modal-toolbar { align-items:flex-start; flex-direction:column; }
+  .contract-summary-grid,.contract-signatures { grid-template-columns:1fr; }
+  .contract-summary-item { border-right:0; border-bottom:1px solid #dce3ec; }
+  .contract-signatures { gap:28px; }
+  .contract-brand span { display:none; }
+}
+
+@media print {
+  @page { size:Letter; margin:0.45in; }
+  body * { visibility:hidden !important; }
+  [data-print-contract],[data-print-contract] * { visibility:visible !important; }
+  [data-print-contract] { position:absolute; inset:0 auto auto 0; width:100%; max-width:none; margin:0; padding:0 28px 20px; box-shadow:none; }
+  .contract-document-header { margin:0 -28px; padding:20px 28px; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  .contract-summary-grid,.contract-callout,.contract-section-heading > span,.contract-terms-grid > div,.contract-document-footer { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  .contract-document-footer { margin:28px -28px -20px; padding:10px 28px; }
+  .contract-section,.contract-callout,.contract-signatures { break-inside:avoid; }
+  .contract-hero { padding-top:28px; }
+}

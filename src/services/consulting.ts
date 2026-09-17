@@ -1,5 +1,10 @@
 import { supabase } from "../lib/supabase";
-import type { ConsultingSnapshot } from "../types/consulting";
+import type {
+  ConsultingBillingModel,
+  ConsultingContractData,
+  ConsultingContractStatus,
+  ConsultingSnapshot,
+} from "../types/consulting";
 
 async function authHeaders(): Promise<Record<string, string>> {
   const { data: { session } } = await supabase.auth.getSession();
@@ -50,18 +55,20 @@ export function createConsultingContract(input: {
   clientId: string;
   title: string;
   serviceType: string;
-  billingModel: "hourly" | "daily" | "fixed" | "retainer";
+  templateKey: string;
+  billingModel: ConsultingBillingModel;
   rateCents: number | null;
   startDate?: string;
   endDate?: string;
   scope: string;
+  contractData: ConsultingContractData;
 }) {
   return post<{ id: string }>({ action: "contract-create", ...input });
 }
 
 export function setContractStatus(input: {
   contractId: string;
-  status: "draft" | "sent" | "accepted" | "completed" | "cancelled";
+  status: ConsultingContractStatus;
   acceptedBy?: string;
 }) {
   return post<{ updated: true }>({ action: "contract-status", ...input });

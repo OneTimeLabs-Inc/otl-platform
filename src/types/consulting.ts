@@ -11,18 +11,34 @@ export type ConsultingClient = {
   createdAt: string;
 };
 
+export type ConsultingBillingModel = "hourly" | "daily" | "fixed" | "retainer";
+
+export type ConsultingContractStatus = "draft" | "sent" | "accepted" | "completed" | "cancelled";
+
+export type ConsultingContractData = {
+  projectSummary: string;
+  deliverables: string;
+  clientResponsibilities: string;
+  assumptions: string;
+  exclusions: string;
+  paymentTerms: string;
+  specialTerms: string;
+};
+
 export type ConsultingContract = {
   id: string;
   clientId: string;
   title: string;
   serviceType: string;
-  status: "draft" | "sent" | "accepted" | "completed" | "cancelled";
+  templateKey: string;
+  status: ConsultingContractStatus;
   startDate: string | null;
   endDate: string | null;
-  billingModel: "hourly" | "daily" | "fixed" | "retainer";
+  billingModel: ConsultingBillingModel;
   rateCents: number | null;
   currency: string;
   scope: string | null;
+  contractData: ConsultingContractData;
   contractText: string | null;
   acceptedAt: string | null;
   acceptedBy: string | null;
