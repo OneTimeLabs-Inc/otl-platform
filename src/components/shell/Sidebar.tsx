@@ -17,6 +17,7 @@ import {
   UserRoundPlus,
   FileSignature,
   ReceiptText,
+  Rocket,
 } from "lucide-react";
 
 import type { Page } from "./AdminShell";
@@ -100,6 +101,16 @@ export default function Sidebar({
           <span>Applications</span>
         </button>
 
+        {isPlatformAdmin && (
+          <button
+            className={`sidebar-item ${currentPage === "launchConsole" ? "active" : ""}`}
+            onClick={() => onNavigate("launchConsole")}
+          >
+            <Rocket size={18} />
+            <span>Launch Console</span>
+          </button>
+        )}
+
         <button
           className={`sidebar-item ${currentPage === "licensing" ? "active" : ""}`}
           onClick={() => onNavigate("licensing")}
@@ -170,7 +181,10 @@ export default function Sidebar({
           </button>
         )}
 
-        <button className="sidebar-item" disabled>
+        <button
+          className={`sidebar-item ${currentPage === "roles" ? "active" : ""}`}
+          onClick={() => onNavigate("roles")}
+        >
           <Shield size={18} />
           <span>Roles</span>
         </button>

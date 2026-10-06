@@ -3,6 +3,7 @@ import type {
   LicenseStatus,
   SoftwareLicensingSnapshot,
 } from "../types/softwareLicensing";
+import { apiError, readJson } from "./apiResponse";
 
 async function authHeaders(): Promise<Record<string, string>> {
   const {
@@ -19,25 +20,16 @@ async function authHeaders(): Promise<Record<string, string>> {
   };
 }
 
-async function readError(response: Response): Promise<string> {
-  try {
-    const body = await response.json() as { error?: string };
-    return body.error || `Request failed with status ${response.status}.`;
-  } catch {
-    return `Request failed with status ${response.status}.`;
-  }
-}
-
 export async function getSoftwareLicensingSnapshot(): Promise<SoftwareLicensingSnapshot> {
   const response = await fetch("/api/admin/software-licenses", {
     headers: await authHeaders(),
   });
 
   if (!response.ok) {
-    throw new Error(await readError(response));
+    throw new Error(await apiError(response, "/api/admin/software-licenses"));
   }
 
-  return await response.json() as SoftwareLicensingSnapshot;
+  return await readJson<SoftwareLicensingSnapshot>(response, "/api/admin/software-licenses");
 }
 
 async function postAction<T>(body: Record<string, unknown>): Promise<T> {
@@ -48,10 +40,10 @@ async function postAction<T>(body: Record<string, unknown>): Promise<T> {
   });
 
   if (!response.ok) {
-    throw new Error(await readError(response));
+    throw new Error(await apiError(response, "/api/admin/software-licenses"));
   }
 
-  return await response.json() as T;
+  return await readJson<T>(response, "/api/admin/software-licenses");
 }
 
 export async function assignPerpetualLicense(input: {

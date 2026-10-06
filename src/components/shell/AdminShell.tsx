@@ -12,6 +12,7 @@ export type Page =
   | "organizations"
   | "documents"
   | "applications"
+  | "launchConsole"
   | "marketplace"
   | "licensing"
   | "consultingClients"

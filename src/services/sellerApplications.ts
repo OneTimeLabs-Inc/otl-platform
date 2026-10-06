@@ -1,4 +1,5 @@
 import { supabase } from "../lib/supabase";
+import { apiError, readJson } from "./apiResponse";
 import type {
   SellerApplication,
   SellerApplicationStatus,
@@ -26,20 +27,6 @@ async function authHeaders(): Promise<Record<string, string>> {
   };
 }
 
-async function readError(response: Response): Promise<string> {
-  try {
-    const body = await response.json() as { error?: string };
-    return body.error || `Request failed with status ${response.status}.`;
-  } catch {
-    return `Request failed with status ${response.status}.`;
-  }
-}
-
-/* ==========================================================
-   SELLER APPLICATIONS 002
-   Current applicant
-   ========================================================== */
-
 export async function getMySellerApplication():
   Promise<SellerApplication | null> {
   const response = await fetch(
@@ -51,13 +38,11 @@ export async function getMySellerApplication():
 
   if (!response.ok) {
     throw new Error(
-      await readError(response),
+      await apiError(response, response.url.includes("/api/admin/") ? "/api/admin/seller-applications" : "/api/seller-application"),
     );
   }
 
-  const body = await response.json() as {
-    application: SellerApplication | null;
-  };
+  const body = await readJson<{ application: SellerApplication | null }>(response, "/api/seller-application");
 
   return body.application;
 }
@@ -78,13 +63,11 @@ export async function submitSellerApplication(input: {
 
   if (!response.ok) {
     throw new Error(
-      await readError(response),
+      await apiError(response, response.url.includes("/api/admin/") ? "/api/admin/seller-applications" : "/api/seller-application"),
     );
   }
 
-  const body = await response.json() as {
-    application: SellerApplication;
-  };
+  const body = await readJson<{ application: SellerApplication }>(response, response.url.includes("/api/admin/") ? "/api/admin/seller-applications" : "/api/seller-application");
 
   return body.application;
 }
@@ -105,13 +88,11 @@ export async function getSellerApplications():
 
   if (!response.ok) {
     throw new Error(
-      await readError(response),
+      await apiError(response, response.url.includes("/api/admin/") ? "/api/admin/seller-applications" : "/api/seller-application"),
     );
   }
 
-  const body = await response.json() as {
-    applications: SellerApplication[];
-  };
+  const body = await readJson<{ applications: SellerApplication[] }>(response, "/api/admin/seller-applications");
 
   return body.applications;
 }
@@ -134,13 +115,11 @@ export async function reviewSellerApplication(
 
   if (!response.ok) {
     throw new Error(
-      await readError(response),
+      await apiError(response, response.url.includes("/api/admin/") ? "/api/admin/seller-applications" : "/api/seller-application"),
     );
   }
 
-  const body = await response.json() as {
-    application: SellerApplication;
-  };
+  const body = await readJson<{ application: SellerApplication }>(response, response.url.includes("/api/admin/") ? "/api/admin/seller-applications" : "/api/seller-application");
 
   return body.application;
 }

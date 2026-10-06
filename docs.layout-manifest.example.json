@@ -1,0 +1,22 @@
+{
+  "code": "coastal-blue",
+  "name": "Coastal Blue",
+  "description": "Bright photographic service-business layout.",
+  "styleKey": "custom-manifest",
+  "previewImageUrl": "",
+  "config": {
+    "palette": {
+      "background": "#f4f8fb",
+      "surface": "#ffffff",
+      "text": "#10293d",
+      "muted": "#5e7280",
+      "accent": "#1677a6",
+      "accent2": "#d9eef7"
+    },
+    "hero": "split",
+    "cards": "soft",
+    "nav": "light",
+    "radius": "18px",
+    "font": "sans"
+  }
+}

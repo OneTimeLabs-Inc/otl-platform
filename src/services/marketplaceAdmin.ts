@@ -4,6 +4,7 @@ import type {
   MarketplaceListingStatus,
   MarketplaceSellerStatus,
 } from "../types/marketplaceAdmin";
+import { apiError, readJson } from "./apiResponse";
 
 async function authHeaders(): Promise<Record<string, string>> {
   const {
@@ -20,25 +21,16 @@ async function authHeaders(): Promise<Record<string, string>> {
   };
 }
 
-async function readError(response: Response): Promise<string> {
-  try {
-    const body = await response.json() as { error?: string };
-    return body.error || `Request failed with status ${response.status}.`;
-  } catch {
-    return `Request failed with status ${response.status}.`;
-  }
-}
-
 export async function getMarketplaceAdminSnapshot(): Promise<MarketplaceAdminSnapshot> {
   const response = await fetch("/api/admin/marketplace", {
     headers: await authHeaders(),
   });
 
   if (!response.ok) {
-    throw new Error(await readError(response));
+    throw new Error(await apiError(response, "/api/admin/marketplace"));
   }
 
-  return await response.json() as MarketplaceAdminSnapshot;
+  return await readJson<MarketplaceAdminSnapshot>(response, "/api/admin/marketplace");
 }
 
 async function postAction(body: Record<string, unknown>): Promise<void> {
@@ -49,7 +41,7 @@ async function postAction(body: Record<string, unknown>): Promise<void> {
   });
 
   if (!response.ok) {
-    throw new Error(await readError(response));
+    throw new Error(await apiError(response, "/api/admin/marketplace"));
   }
 }
 

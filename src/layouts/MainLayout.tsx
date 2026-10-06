@@ -15,8 +15,10 @@ import Organizations from "../features/organizations/Organizations";
 import Documents from "../pages/documents/Documents";
 
 import AppMessages from "../pages/appMessages/AppMessages";
+import Roles from "../pages/roles/Roles";
 
 import Applications from "../pages/applications/Applications";
+import LaunchConsole from "../pages/launchConsole/LaunchConsole";
 import Marketplace from "../pages/marketplace/Marketplace";
 import Licensing from "../pages/licensing/Licensing";
 import ConsultingClients from "../pages/consulting/ConsultingClients";
@@ -160,6 +162,15 @@ const [
         );
 
 
+      case "launchConsole":
+
+        return (
+
+          <LaunchConsole />
+
+        );
+
+
       case "marketplace":
 
         return (
@@ -210,6 +221,15 @@ const [
         return (
 
           <AppMessages />
+
+        );
+
+
+      case "roles":
+
+        return (
+
+          <Roles />
 
         );
 
